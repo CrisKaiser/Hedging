@@ -9,12 +9,12 @@ import scipy.stats as stats
 class BlackScholes:
     file_path = "data/bitcoin_2010-07-17_2024-12-15.csv"
 
-    #literals:
     _sigma = 0.1 #reflects course volatility
-    _r = 0.1 #reflects course drift, either risk free rent or estimated yield
+    _r = 0.02 #ezb yield
 
-    def __init__(self):
-        pass
+    def __init__(self, r, sigma):
+        self._r = r
+        self.sigma = sigma
 
     def calcOptionPrice(self, creation_date, current_date, expire_date, K, optionType):
         bigPhiA = stats.norm.cdf(self.getA(creation_date, current_date, expire_date, K), self._r, self._sigma)

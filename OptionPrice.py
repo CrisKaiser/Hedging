@@ -6,12 +6,12 @@ import numpy as np
 import math
 
 class OptionPrice:
-    _N = 1000
+    _N = 100
     file_path = "data/bitcoin_2010-07-17_2024-12-15.csv"
 
     #literals:
     _sigma = 0.1 #reflects course volatility
-    _mu = 0.1 #reflects course drift, either risk free rent or estimated yield
+    _mu = 0.02 #reflects course drift, either risk free rent or estimated yield
 
     def __init__(self):
         pass
