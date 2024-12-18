@@ -13,15 +13,12 @@ def getMarketOptionPrice(creation_date, current_date, expire_date, K, optionType
 
 def get_yield_for_date(file_path, search_date):
     try:
-        # CSV einlesen
         df = pd.read_csv(file_path)
 
-        # Überprüfen, ob die Spalten korrekt benannt sind
         if 'date' not in df.columns or 'yield' not in df.columns:
             print("Column not found")
             return
 
-        # Suchen nach dem Zinssatz für das gegebene Datum
         result = df[df['date'] == search_date]
 
         if not result.empty:

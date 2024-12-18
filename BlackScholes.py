@@ -26,7 +26,9 @@ class BlackScholes:
             return sT * bigPhiA - K * np.exp( -self._r * self.day_difference(current_date, expire_date) )*bigPhiB
 
         elif optionType == Global.OType.PUT:
-            return -1;
+            pricesT = self.getHighLowForDate(self.file_path, current_date)
+            sT = sT = 0.5 * (float(pricesT[0]) + float(pricesT[1]))
+            return sT*(bigPhiB-1.0) - K * np.exp( -self._r * self.day_difference(current_date, expire_date) )*(bigPhiB-1.0)
 
 
     def getHighLowForDate(self, file_path, target_date):
