@@ -4,37 +4,30 @@ from datetime import datetime
 import random
 import numpy as np
 import math
+import scipy.stats as stats
 
-class OptionPrice:
-    _N = 1000
+class BlackScholes:
     file_path = "data/bitcoin_2010-07-17_2024-12-15.csv"
 
     #literals:
     _sigma = 0.1 #reflects course volatility
-    _mu = 0.1 #reflects course drift, either risk free rent or estimated yield
+    _r = 0.1 #reflects course drift, either risk free rent or estimated yield
 
     def __init__(self):
         pass
 
     def calcOptionPrice(self, creation_date, current_date, expire_date, K, optionType):
-        return np.exp( self.day_difference(expire_date, current_date) ) * self.monteCarlo(self._N, creation_date, expire_date, K, optionType)
-
-    def monteCarlo(self, N, creation_date, expire_date, K, optionType):
-        _sum = 0
-        for i in range(self._N):
-            _sum += self.bigLambda(creation_date, expire_date, K, optionType)
-        return (1. / self._N) * _sum
-
-    def bigLambda(self, creation_date, expire_date, K, optionType):
-        pricesT = self.getHighLowForDate(self.file_path, creation_date);
-        s0 = 0.5 * (float(pricesT[0]) + float(pricesT[1]))
-        T = self.day_difference(creation_date, expire_date)
-        futureStockPrice = s0 * np.exp( (self._mu - 0.5*math.pow(self._sigma,2))*T + (self._sigma * math.sqrt(T)* self.getZ()) )
+        bigPhiA = stats.norm.cdf(self.getA(creation_date, current_date, expire_date, K), self._r, self._sigma)
+        bigPhiB = stats.norm.cdf(self.getB(creation_date, current_date, expire_date, K), self._r, self._sigma)
 
         if optionType == Global.OType.CALL:
-            return max(futureStockPrice - K,0)
+            pricesT = self.getHighLowForDate(self.file_path, current_date)
+            sT = sT = 0.5 * (float(pricesT[0]) + float(pricesT[1]))
+            return sT * bigPhiA - K * np.exp( -self._r * self.day_difference(current_date, expire_date) )*bigPhiB
+
         elif optionType == Global.OType.PUT:
-            return max(K - futureStockPrice, 0)
+            return -1;
+
 
     def getHighLowForDate(self, file_path, target_date):
         try:
@@ -64,7 +57,15 @@ class OptionPrice:
         
         diff = float ((date2_obj - date1_obj).days) / 365.0 #!Jahresrendite
         return diff
-    	
-    def getZ(self):
-        return random.gauss(0, 1)
     
+    def getA(self, creation_date, current_date, expire_date, K):
+        T = self.day_difference(creation_date, expire_date)
+        pricesT = self.getHighLowForDate(self.file_path, current_date)
+        sT = sT = 0.5 * (float(pricesT[0]) + float(pricesT[1]))
+        _c0 = math.log(sT /  K)
+        _c1 = (self._r + 0.5*math.pow(self._sigma, 2)) * self.day_difference(current_date, expire_date)
+        _c2 = self._sigma * math.sqrt(self.day_difference(current_date, expire_date))
+        return (_c0 + _c1)/_c2
+
+    def getB(self, creation_date, current_date, expire_date, K):
+        return self.getA(creation_date, current_date, expire_date, K) - self._sigma * math.sqrt(self.day_difference(current_date, expire_date))

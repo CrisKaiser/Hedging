@@ -2,6 +2,6 @@ from enum import Enum
 
 INIT_INVEST = 100000
 
-class OTpye(Enum):
+class OType(Enum):
     PUT = 0
     CALL = 1
