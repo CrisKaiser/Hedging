@@ -10,27 +10,31 @@ class OptionPrice:
     file_path = "data/bitcoin_2010-07-17_2024-12-15.csv"
 
     #literals:
-    _sigma = 0.3
+    _sigma = 0.1
     _mu = 0.1
 
     def __init__(self):
         pass
 
-    def calcOptionPrice(file_path):
-        pass
+    def calcOptionPrice(self, creation_date, current_date, expire_date, K, optionType):
+        return np.exp( self.day_difference(expire_date, current_date) ) * self.monteCarlo(self._N, creation_date, expire_date, K, optionType)
 
+    def monteCarlo(self, N, creation_date, expire_date, K, optionType):
+        _sum = 0
+        for i in range(self._N):
+            _sum += self.bigLambda(creation_date, expire_date, K, optionType)
+        return (1. / self._N) * _sum
 
-    def bigLambda(self, current_date, date, K, optionType):
-        pricesT = self.getHighLowForDate(self.file_path, date);
+    def bigLambda(self, creation_date, expire_date, K, optionType):
+        pricesT = self.getHighLowForDate(self.file_path, creation_date);
         s0 = 0.5 * (float(pricesT[0]) + float(pricesT[1]))
-        T = self.day_difference(current_date, date)
+        T = self.day_difference(creation_date, expire_date)
         futureStockPrice = s0 * np.exp( (self._mu - 0.5*math.pow(self._sigma, 2) ) * T + self._sigma*math.sqrt(T) * self.getZ())
 
         if optionType == Global.OTpye.CALL:
             return max(futureStockPrice - K,0)
         elif optionType == Global.OTpye.PUT:
             return max(K - futureStockPrice, 0)
-
 
     def getHighLowForDate(self, file_path, target_date):
         try:
@@ -42,7 +46,6 @@ class OptionPrice:
                     if date == target_date:
                         high_price = row.get('High')
                         low_price = row.get('Low')
-                        print(f"Am {target_date}: High = {high_price}, Low = {low_price}")
                         return high_price, low_price
 
                 print(f"Kein Eintrag für das Datum {target_date} gefunden.")
