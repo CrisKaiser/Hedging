@@ -57,13 +57,13 @@ class BlackScholes:
         date1_obj = datetime.strptime(date1, format_str)
         date2_obj = datetime.strptime(date2, format_str)
         
-        diff = float ((date2_obj - date1_obj).days) / 365.0 #!Jahresrendite
+        diff = float ((date2_obj - date1_obj).days) / 365.2425 #!Jahresrendite
         return diff
     
     def getA(self, creation_date, current_date, expire_date, K):
         T = self.day_difference(creation_date, expire_date)
         pricesT = self.getHighLowForDate(self.file_path, current_date)
-        sT = sT = 0.5 * (float(pricesT[0]) + float(pricesT[1]))
+        sT = 0.5 * (float(pricesT[0]) + float(pricesT[1]))
         _c0 = math.log(sT /  K)
         _c1 = (self._r + 0.5*math.pow(self._sigma, 2)) * self.day_difference(current_date, expire_date)
         _c2 = self._sigma * math.sqrt(self.day_difference(current_date, expire_date))
@@ -77,7 +77,7 @@ class BlackScholes:
         bigPhiB = stats.norm.cdf(self.getB(creation_date, current_date, expire_date, K), self._r, self._sigma)
         T = self.day_difference(creation_date, expire_date)
         pricesT0 = self.getHighLowForDate(self.file_path, creation_date)
-        s0 = s0 = 0.5 * (float(pricesT[0]) + float(pricesT[1]))
+        s0 = 0.5 * (float(pricesT0[0]) + float(pricesT0[1]))
             
         if optionType == Global.OType.CALL:
             _c0 = ( s0 * smallPhiA * self._sigma ) / ( 2.0 * math.sqrt(T) )
@@ -93,14 +93,14 @@ class BlackScholes:
         smallPhiA = stats.norm.pdf(self.getA(creation_date, current_date, expire_date, K), self._r, self._sigma)
         T = self.day_difference(creation_date, expire_date)
         pricesT0 = self.getHighLowForDate(self.file_path, creation_date)
-        s0 = s0 = 0.5 * (float(pricesT[0]) + float(pricesT[1]))
+        s0 = 0.5 * (float(pricesT0[0]) + float(pricesT0[1]))
         return (smallPhiA) / (s0 * self._sigma * math.sqrt(T))
 
     def getVega(self, creation_date, current_date, expire_date, K, optionType):
         smallPhiA = stats.norm.pdf(self.getA(creation_date, current_date, expire_date, K), self._r, self._sigma)
         T = self.day_difference(creation_date, expire_date)
         pricesT0 = self.getHighLowForDate(self.file_path, creation_date)
-        s0 = s0 = 0.5 * (float(pricesT[0]) + float(pricesT[1]))
+        s0 = 0.5 * (float(pricesT0[0]) + float(pricesT0[1]))
         return s0 * math.sqrt(T) * smallPhiA
 
     def getRho(self, creation_date, current_date, expire_date, K, optionType):

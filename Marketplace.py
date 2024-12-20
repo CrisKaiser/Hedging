@@ -10,6 +10,26 @@ def getMarketOptionPrice(creation_date, current_date, expire_date, K, optionType
     bs = BlackScholes(_r, _sigma)
     return bs.calcOptionPrice(creation_date, current_date, expire_date, K, optionType)
 
+def getMarketOptionTheta(creation_date, current_date, expire_date, K, optionType):
+    _r = get_yield_for_date(file_path, current_date)
+    bs = BlackScholes(_r, _sigma)
+    return bs.getTheta(creation_date, current_date, expire_date, K, optionType)
+
+def getMarketOptionGamma(creation_date, current_date, expire_date, K, optionType):
+    _r = get_yield_for_date(file_path, current_date)
+    bs = BlackScholes(_r, _sigma)
+    return bs.getGamma(creation_date, current_date, expire_date, K, optionType)
+
+def getMarketOptionVega(creation_date, current_date, expire_date, K, optionType):
+    _r = get_yield_for_date(file_path, current_date)
+    bs = BlackScholes(_r, _sigma)
+    return bs.getVega(creation_date, current_date, expire_date, K, optionType)
+
+def getMarketOptionRho(creation_date, current_date, expire_date, K, optionType):
+    _r = get_yield_for_date(file_path, current_date)
+    bs = BlackScholes(_r, _sigma)
+    return bs.getRho(creation_date, current_date, expire_date, K, optionType)
+
 def get_yield_for_date(file_path, search_date):
     try:
         df = pd.read_csv(file_path)
@@ -34,4 +54,10 @@ def get_yield_for_date(file_path, search_date):
 def getMarketOptionGreeks(creation_date, current_date, expire_date, K, optionType):
     _r = get_yield_for_date(file_path, current_date)
     bs = BlackScholes(_r, _sigma)
+    return ([
+        bs.getTheta(creation_date, current_date, expire_date, K, optionType),
+        bs.getGamma(creation_date, current_date, expire_date, K, optionType),
+        bs.getVega(creation_date, current_date, expire_date, K, optionType),
+        bs.getRho(creation_date, current_date, expire_date, K, optionType
+        )])
 
