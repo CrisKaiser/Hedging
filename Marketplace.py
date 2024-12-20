@@ -3,11 +3,10 @@ from BlackScholes import BlackScholes;
 
 file_path = "data\interest_rates.csv"
 
+_sigma = 0.1 #to be complited
+
 def getMarketOptionPrice(creation_date, current_date, expire_date, K, optionType):
-    _sigma = 0.1 #to be complited
-
     _r = get_yield_for_date(file_path, current_date)
-
     bs = BlackScholes(_r, _sigma)
     return bs.calcOptionPrice(creation_date, current_date, expire_date, K, optionType)
 
@@ -31,3 +30,8 @@ def get_yield_for_date(file_path, search_date):
         print(f"File not found: {file_path}.")
     except Exception as e:
         print(f"Error: {e}")
+
+def getMarketOptionGreeks(creation_date, current_date, expire_date, K, optionType):
+    _r = get_yield_for_date(file_path, current_date)
+    bs = BlackScholes(_r, _sigma)
+
