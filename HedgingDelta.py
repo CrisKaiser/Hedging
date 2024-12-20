@@ -5,4 +5,7 @@ class HedgingDelta:
         pass
 
     def calcNewDelta(self):
+        #{
+            #using MonteCarlo for hedging!
+        #}
         pass
