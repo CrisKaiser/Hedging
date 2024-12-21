@@ -1,6 +1,6 @@
 
 import Global
-from OptionPrice import OptionPrice;
+from MonteCarlo import MonteCarlo
 import Marketplace
 
 def main():
@@ -19,6 +19,10 @@ def main():
     print("Rho: " + str(rho))
 
     print(str(greeks))
+
+    m = MonteCarlo()
+    s = m.calcOptionPrice("2015-10-10", "2015-10-11", "2015-10-30", 229, Global.OType.PUT)
+    print(s)
 
 
 if __name__ == "__main__":
