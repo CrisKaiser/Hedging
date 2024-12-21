@@ -1,27 +1,21 @@
 
 import Global
-from MonteCarlo import MonteCarlo
-import Marketplace
+from Option import Option
 
 def main():
     
+    o = Option("2015-10-10", "2015-10-11", "2015-10-30", 229, Global.OType.PUT)
+    p = o.getMarketValue()
+    theta = o.getTheta()
+    gamma = o.getGamma()
+    vega = o.getVega()
+    rho = o.getRho()
 
-    p = Marketplace.getMarketOptionPrice("2015-10-10", "2015-10-11", "2015-10-30", 229, Global.OType.PUT)
-    theta = Marketplace.getMarketOptionTheta("2015-10-10", "2015-10-11", "2015-10-30", 229, Global.OType.PUT)
-    gamma = Marketplace.getMarketOptionGamma("2015-10-10", "2015-10-11", "2015-10-30", 229, Global.OType.PUT)
-    vega = Marketplace.getMarketOptionVega("2015-10-10", "2015-10-11", "2015-10-30", 229, Global.OType.PUT)
-    rho = Marketplace.getMarketOptionRho("2015-10-10", "2015-10-11", "2015-10-30", 229, Global.OType.PUT)
-    greeks = Marketplace.getMarketOptionGreeks("2015-10-10", "2015-10-11", "2015-10-30", 229, Global.OType.PUT)
     print("Option Price: " + str(p))
     print("Theta: " + str(theta))
     print("Gamma: " + str(gamma))
     print("Vega: " + str(vega))
     print("Rho: " + str(rho))
-
-    print(str(greeks))
-
-    s = Marketplace.getMonteCarloPrice("2015-10-10", "2015-10-11", "2015-10-30", 229, Global.OType.PUT)
-    print(s)
 
 
 

@@ -17,8 +17,8 @@ class BlackScholes:
         self._sigma = sigma
 
     def calcOptionPrice(self, creation_date, current_date, expire_date, K, optionType, st):
-        bigPhiA = stats.norm.cdf(self.getA(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
-        bigPhiB = stats.norm.cdf(self.getB(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
+        bigPhiA = self.getBigPhiA(creation_date, current_date, expire_date, K, optionType, st)
+        bigPhiB = self.getBigPhiB(creation_date, current_date, expire_date, K, optionType, st)
 
         if optionType == Global.OType.CALL:
             return st * bigPhiA - K * np.exp( -self._r * self.day_difference(current_date, expire_date) )*bigPhiB
@@ -45,8 +45,8 @@ class BlackScholes:
         return self.getA(creation_date, current_date, expire_date, K, st) - self._sigma * math.sqrt(self.day_difference(current_date, expire_date))
 
     def getTheta(self, creation_date, current_date, expire_date, K, optionType, s0, st):
-        smallPhiA = stats.norm.pdf(self.getA(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
-        bigPhiB = stats.norm.cdf(self.getB(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
+        smallPhiA = self.getSmallPhiA(creation_date, current_date, expire_date, K, optionType, st)
+        bigPhiB = self.getBigPhiB(creation_date, current_date, expire_date, K, optionType, st)
         T = self.day_difference(creation_date, expire_date)
             
         if optionType == Global.OType.CALL:
@@ -60,19 +60,28 @@ class BlackScholes:
             return _c0 + _c1
 
     def getGamma(self, creation_date, current_date, expire_date, K, optionType, s0, st):
-        smallPhiA = stats.norm.pdf(self.getA(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
+        smallPhiA = self.getSmallPhiA(creation_date, current_date, expire_date, K, optionType, st)
         T = self.day_difference(creation_date, expire_date)
         return (smallPhiA) / (s0 * self._sigma * math.sqrt(T))
 
     def getVega(self, creation_date, current_date, expire_date, K, optionType, s0, st):
-        smallPhiA = stats.norm.pdf(self.getA(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
+        smallPhiA = self.getSmallPhiA(creation_date, current_date, expire_date, K, optionType, st)
         T = self.day_difference(creation_date, expire_date)
         return s0 * math.sqrt(T) * smallPhiA
 
     def getRho(self, creation_date, current_date, expire_date, K, optionType, st):
-        bigPhiB = stats.norm.cdf(self.getB(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
+        bigPhiB = self.getBigPhiB(creation_date, current_date, expire_date, K, optionType, st)
         T = self.day_difference(creation_date, expire_date)
         if optionType == Global.OType.CALL:
             return K * T * np.exp(-self._r * T) * bigPhiB
         elif optionType == Global.OType.PUT:
             return -K * T * np.exp(-self._r * T) * (1.0 - bigPhiB)
+
+    def getBigPhiA(self, creation_date, current_date, expire_date, K, optionType, st):
+        return stats.norm.cdf(self.getA(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
+
+    def getBigPhiB(self, creation_date, current_date, expire_date, K, optionType, st):
+        return stats.norm.cdf(self.getB(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
+
+    def getSmallPhiA(self, creation_date, current_date, expire_date, K, optionType, st):
+        return stats.norm.pdf(self.getA(creation_date, current_date, expire_date, K, st), self._r, self._sigma)

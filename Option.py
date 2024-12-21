@@ -1,13 +1,15 @@
-import Marketplace
+from framework.Marketplace import Marketplace
 
 class Option:
     _creation_date = None
+    _current_date = None
     _expire_date = None
     _K = None
     _optionType = None
 
-    def __init__(self, creation_date, expire_date, K, optionType):
+    def __init__(self, creation_date, current_date, expire_date, K, optionType):
         self._creation_date = creation_date
+        self._current_date = current_date
         self._expire_date = expire_date
         self._K = K
         self._optionType = optionType
@@ -24,8 +26,11 @@ class Option:
     def getOptionType(self):
         return self._optionType
 
-    def getValue(self):
+    def getMarketValue(self):
         return Marketplace.getMarketOptionPrice(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+        
+    def getMonteCarloValue(self):
+        return Marketplace.getMonteCarloValue(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
 
     def getTheta(self):
         return Marketplace.getMarketOptionTheta(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
@@ -42,5 +47,7 @@ class Option:
     def getGreeks(self):
         return Marketplace.getMarketOptionGreeks(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
 
+    def getBigPhiA(self):
+        return Marketplace.getBigPhiA(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
 
     
