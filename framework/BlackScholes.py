@@ -1,7 +1,5 @@
-import csv
 import Global
 from datetime import datetime
-import random
 import numpy as np
 import math
 import scipy.stats as stats
@@ -17,29 +15,41 @@ class BlackScholes:
         self._sigma = sigma
 
     def calcOptionPrice(self, creation_date, current_date, expire_date, K, optionType, st):
+        if st <= 0:
+            raise ValueError("Stockprice negative!")
+        if K <= 0:
+            raise ValueError("Strikeprice negative!")
+        if self.day_difference(current_date, expire_date) <= 0:
+            raise ValueError("T negative!")
+        
         bigPhiA = self.getBigPhiA(creation_date, current_date, expire_date, K, optionType, st)
         bigPhiB = self.getBigPhiB(creation_date, current_date, expire_date, K, optionType, st)
 
         if optionType == Global.OType.CALL:
-            return st * bigPhiA - K * np.exp( -self._r * self.day_difference(current_date, expire_date) )*bigPhiB
-
+            return st * bigPhiA - K * np.exp(-self._r * self.day_difference(current_date, expire_date)) * bigPhiB
         elif optionType == Global.OType.PUT:
-            return st*(bigPhiB-1.0) - K * np.exp( -self._r * self.day_difference(current_date, expire_date) )*(bigPhiB-1.0)
+            return K * np.exp(-self._r * self.day_difference(current_date, expire_date)) * (1 - bigPhiB) - st * (1 - bigPhiA)
 
-    def day_difference(self, date1: str, date2: str) -> int:
+
+    def day_difference(self, date1: str, date2: str) -> float:
         format_str = "%Y-%m-%d"
         date1_obj = datetime.strptime(date1, format_str)
         date2_obj = datetime.strptime(date2, format_str)
-        
-        diff = float ((date2_obj - date1_obj).days) / 365.2425 #!Jahresrendite
-        return diff
+        return (date2_obj - date1_obj).days / 365.2425  # Jahr basiert auf einem Durchschnitt
+
     
     def getA(self, creation_date, current_date, expire_date, K, st):
         T = self.day_difference(creation_date, expire_date)
-        _c0 = math.log(st /  K)
-        _c1 = (self._r + 0.5*math.pow(self._sigma, 2)) * self.day_difference(current_date, expire_date)
-        _c2 = self._sigma * math.sqrt(self.day_difference(current_date, expire_date))
-        return (_c0 + _c1)/_c2
+        if T <= 0:
+            raise ValueError("T negative!")
+        if self._sigma <= 0:
+            raise ValueError("Volatility negative!")
+    
+        _c0 = math.log(st / K)
+        _c1 = (self._r + 0.5 * math.pow(self._sigma, 2)) * T
+        _c2 = self._sigma * math.sqrt(T)
+        return (_c0 + _c1) / _c2
+
 
     def getB(self, creation_date, current_date, expire_date, K, st):
         return self.getA(creation_date, current_date, expire_date, K, st) - self._sigma * math.sqrt(self.day_difference(current_date, expire_date))
@@ -78,10 +88,13 @@ class BlackScholes:
             return -K * T * np.exp(-self._r * T) * (1.0 - bigPhiB)
 
     def getBigPhiA(self, creation_date, current_date, expire_date, K, optionType, st):
-        return stats.norm.cdf(self.getA(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
+        return stats.norm.cdf(self.getA(creation_date, current_date, expire_date, K, st))
 
     def getBigPhiB(self, creation_date, current_date, expire_date, K, optionType, st):
-        return stats.norm.cdf(self.getB(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
+        return stats.norm.cdf(self.getB(creation_date, current_date, expire_date, K, st))
 
     def getSmallPhiA(self, creation_date, current_date, expire_date, K, optionType, st):
-        return stats.norm.pdf(self.getA(creation_date, current_date, expire_date, K, st), self._r, self._sigma)
+        return stats.norm.pdf(self.getA(creation_date, current_date, expire_date, K, st))
+
+    
+    

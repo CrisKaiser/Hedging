@@ -1,23 +1,27 @@
 
 import Global
 from Option import Option
+from framework.Marketplace import Marketplace
 
 def main():
+
+    start = "2016-10-20"
+    now = "2016-10-20"
+    end = "2016-10-27"
     
-    o = Option("2015-10-10", "2015-10-11", "2015-10-30", 229, Global.OType.PUT)
-    p = o.getMarketValue()
-    theta = o.getTheta()
-    gamma = o.getGamma()
-    vega = o.getVega()
-    rho = o.getRho()
+    oC = Option(start, now, end, 254.35399679951226, Global.OType.CALL)
+    oP = Option(start, now, end, 254.35399679951226, Global.OType.PUT)
+    p = oC.getMarketValue()
+    p2 = oP.getMarketValue()
+    s1 = Marketplace.get_yield_for_date(now)
+    s2 = Marketplace.getHistoricalVolatility(now)
+    s3 = Marketplace.getStockPriceOnDate(now)
 
-    print("Option Price: " + str(p))
-    print("Theta: " + str(theta))
-    print("Gamma: " + str(gamma))
-    print("Vega: " + str(vega))
-    print("Rho: " + str(rho))
-
-
+    print("Option CALL Price: " + str(p))
+    print("Option PUT Price: " + str(p2))
+    print("Zins: " + str(s1))
+    print("Vol: " + str(s2))
+    print("StockPrice: " + str(s3))
 
 if __name__ == "__main__":
     main()

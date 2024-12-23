@@ -30,7 +30,7 @@ class Option:
         return Marketplace.getMarketOptionPrice(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
         
     def getMonteCarloValue(self):
-        return Marketplace.getMonteCarloValue(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+        return Marketplace.getMonteCarloPrice(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
 
     def getTheta(self):
         return Marketplace.getMarketOptionTheta(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)

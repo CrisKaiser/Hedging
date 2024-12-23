@@ -5,24 +5,23 @@ from framework.VolatilitySurface import VolatilitySurface
 from framework.MonteCarlo import MonteCarlo
 
 file_path = r"data\interest_rates.csv"
-file_path_stock = r"data/bitcoin_2010-07-17_2024-12-15.csv"
-
-_sigma = VolatilitySurface.getVolatility()
+file_path_stock = r"data\bitcoin_2010-07-17_2024-12-15.csv"
+file_path_volatility = r"data\bitcoin_volatility.csv"
 
 class Marketplace:
 
     @staticmethod
     def getMarketOptionPrice(creation_date, current_date, expire_date, K, optionType):
-        _sigma = VolatilitySurface.getVolatility()
-        _r = Marketplace.get_yield_for_date(file_path, current_date)
+        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         st = Marketplace.getStockPriceOnDate(current_date)
         return bs.calcOptionPrice(creation_date, current_date, expire_date, K, optionType, st)
 
     @staticmethod
     def getMarketOptionTheta(creation_date, current_date, expire_date, K, optionType):
-        _sigma = VolatilitySurface.getVolatility()
-        _r = Marketplace.get_yield_for_date(file_path, current_date)
+        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
         st = Marketplace.getStockPriceOnDate(current_date)
@@ -30,8 +29,8 @@ class Marketplace:
 
     @staticmethod
     def getMarketOptionGamma(creation_date, current_date, expire_date, K, optionType):
-        _sigma = VolatilitySurface.getVolatility()
-        _r = Marketplace.get_yield_for_date(file_path, current_date)
+        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
         st = Marketplace.getStockPriceOnDate(current_date)
@@ -39,8 +38,8 @@ class Marketplace:
 
     @staticmethod
     def getMarketOptionVega(creation_date, current_date, expire_date, K, optionType):
-        _sigma = VolatilitySurface.getVolatility()
-        _r = Marketplace.get_yield_for_date(file_path, current_date)
+        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
         st = Marketplace.getStockPriceOnDate(current_date)
@@ -48,14 +47,14 @@ class Marketplace:
 
     @staticmethod
     def getMarketOptionRho(creation_date, current_date, expire_date, K, optionType):
-        _sigma = VolatilitySurface.getVolatility()
-        _r = Marketplace.get_yield_for_date(file_path, current_date)
+        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         st = Marketplace.getStockPriceOnDate(current_date)
         return bs.getRho(creation_date, current_date, expire_date, K, optionType, st)
 
     @staticmethod
-    def get_yield_for_date(file_path, search_date):
+    def get_yield_for_date(search_date):
         try:
             df = pd.read_csv(file_path)
 
@@ -78,8 +77,8 @@ class Marketplace:
 
     @staticmethod
     def getMarketOptionGreeks(creation_date, current_date, expire_date, K, optionType):
-        _sigma = VolatilitySurface.getVolatility()
-        _r = Marketplace.get_yield_for_date(file_path, current_date)
+        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
         st = Marketplace.getStockPriceOnDate(current_date)
@@ -120,11 +119,30 @@ class Marketplace:
 
     @staticmethod
     def getOptionBigPhiA(creation_date, current_date, expire_date, K, optionType):
-        _sigma = VolatilitySurface.getVolatility()
-        _r = Marketplace.get_yield_for_date(file_path, current_date)
+        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         st = MarketplacegetStockPriceOnDate(current_date)
         return bs.getBigPhiA(creation_date, current_date, expire_date, K, optionType, st)
+
+    @staticmethod
+    def getHistoricalVolatility(target_date):
+        try:
+            with open(file_path_volatility, mode='r', encoding='utf-8') as file:
+                reader = csv.DictReader(file)
+
+                for row in reader:
+                    date = row.get('Datum')
+                    if date == target_date:
+                        return float(row.get('Volatilität', 0))
+
+            print(f"Date {target_date} not found in the data.")
+            return None 
+
+        except FileNotFoundError:
+            print(f"Could not find: {file_path_volatility}")
+        except Exception as e:
+            print(f"Could not load data: {e}")
 
 
 

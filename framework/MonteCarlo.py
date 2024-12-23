@@ -11,7 +11,7 @@ class MonteCarlo:
 
     #default
     _N = 100000
-    _sigma = 0.1 
+    _sigma = 0.3
     _mu = Global.EXP_RETURN
 
     def calcOptionPrice(self, creation_date, current_date, expire_date, K, optionType, s0):
