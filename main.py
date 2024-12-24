@@ -20,8 +20,13 @@ def main():
     s2 = Marketplace.getHistoricalVolatility(now)
     s3 = Marketplace.getStockPriceOnDate(now)
 
+    mcC = oC.getMonteCarloValue()
+    mcP = oP.getMonteCarloValue()
+
     print("Option CALL Price: " + str(p))
     print("Option PUT Price: " + str(p2))
+    print("Option MonteCarlo CALL Price: " + str(mcC))
+    print("Option MonteCarlo PUT Price: " + str(mcP))
     print("Zins: " + str(s1))
     print("Vol: " + str(s2))
     print("StockPrice: " + str(s3))
@@ -31,6 +36,16 @@ def main():
 
     print("Delta Call: " + str(d1))
     print("Delta Put: " + str(d2))
+
+    Global.HEDGING_MODE = 1
+
+    md1 = HedgingDelta.calcNewDelta(oC)
+    md2 = HedgingDelta.calcNewDelta(oP)
+
+    print("Delta MC Call: " + str(md1))
+    print("Delta MC Put: " + str(md2))
+
+    
 
     
 

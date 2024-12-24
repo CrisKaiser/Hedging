@@ -11,7 +11,7 @@ class MonteCarlo:
 
     #default
     _N = 100000
-    _sigma = 0.3
+    _sigma = 0.17314693165057277
     _mu = Global.EXP_RETURN
 
     def calcOptionPrice(self, creation_date, current_date, expire_date, K, optionType, s0):
@@ -20,12 +20,15 @@ class MonteCarlo:
     def monteCarlo(self, N, creation_date, expire_date, K, optionType, s0):
         _sum = 0
         for i in range(self._N):
-            _sum += self.bigLambda(creation_date, expire_date, K, optionType, s0)
+            z = self.getZ()
+            _z0 = self.bigLambda(creation_date, expire_date, K, optionType, s0, z)
+            _z1 = self.bigLambda(creation_date, expire_date, K, optionType, s0, -z)
+            _sum += (_z0 + _z1) / 2.0
         return (1. / self._N) * _sum
 
-    def bigLambda(self, creation_date, expire_date, K, optionType, s0):
+    def bigLambda(self, creation_date, expire_date, K, optionType, s0, z):
         T = self.day_difference(creation_date, expire_date)
-        futureStockPrice = s0 * np.exp( (self._mu - 0.5*math.pow(self._sigma,2))*T + (self._sigma * math.sqrt(T)* self.getZ()) )
+        futureStockPrice = s0 * np.exp( (self._mu - 0.5*math.pow(self._sigma,2))*T + (self._sigma * math.sqrt(T)* z) )
 
         if optionType == Global.OType.CALL:
             return max(futureStockPrice - K,0)

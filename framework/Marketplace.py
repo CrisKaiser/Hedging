@@ -95,6 +95,12 @@ class Marketplace:
         return mc.calcOptionPrice(creation_date, current_date, expire_date, K, optionType, s0)
 
     @staticmethod
+    def getMonteCarloHedgingPrice(creation_date, current_date, expire_date, K, optionType, h):
+        mc = MonteCarlo()
+        s0 = Marketplace.getStockPriceOnDate(creation_date) + h
+        return mc.calcOptionPrice(creation_date, current_date, expire_date, K, optionType, s0)
+
+    @staticmethod
     def getStockPriceOnDate(target_date):
         try:
             with open(file_path_stock, mode='r', encoding='utf-8') as file:

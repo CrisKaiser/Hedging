@@ -14,5 +14,7 @@ class HedgingDelta:
                 return option.getBigPhiA() - 1.0
 
         elif Global.HEDGING_MODE == 1:
-            #Monte-Carlo
-            pass
+            h = 0.4
+            Vh = option.getMonteCarloHedgingValue(h)
+            V = option.getMonteCarloValue()
+            return (Vh - V) / h
