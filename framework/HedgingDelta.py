@@ -1,17 +1,17 @@
 
 import Global
-import Marketplace
+from framework.Marketplace import Marketplace
 from Option import Option
 
 class HedgingDelta:
 
-    def __init__(self):
-        pass
-
-    def calcNewDelta(self, option: Option, ):
+    @staticmethod
+    def calcNewDelta(option: Option):
         if Global.HEDGING_MODE == 0:
-            #Black-Scholes
-            pass
+            if option._optionType == Global.OType.CALL:
+                return option.getBigPhiA()
+            elif option._optionType == Global.OType.PUT:
+                return option.getBigPhiA() - 1.0
 
         elif Global.HEDGING_MODE == 1:
             #Monte-Carlo

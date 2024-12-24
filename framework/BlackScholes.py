@@ -7,8 +7,8 @@ import scipy.stats as stats
 class BlackScholes:
     file_path = "data/bitcoin_2010-07-17_2024-12-15.csv"
 
-    _sigma = 0.1 #default value
-    _r = 0.02 #default value
+    _sigma = None
+    _r = None
 
     def __init__(self, r, sigma):
         self._r = r

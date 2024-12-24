@@ -48,6 +48,6 @@ class Option:
         return Marketplace.getMarketOptionGreeks(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
 
     def getBigPhiA(self):
-        return Marketplace.getBigPhiA(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+        return Marketplace.getOptionBigPhiA(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
 
     

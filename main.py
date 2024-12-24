@@ -2,15 +2,18 @@
 import Global
 from Option import Option
 from framework.Marketplace import Marketplace
+from framework.HedgingDelta import HedgingDelta
 
 def main():
 
     start = "2016-10-20"
     now = "2016-10-20"
     end = "2016-10-27"
+
+    stock_price = 600.174788539206
     
-    oC = Option(start, now, end, 254.35399679951226, Global.OType.CALL)
-    oP = Option(start, now, end, 254.35399679951226, Global.OType.PUT)
+    oC = Option(start, now, end, stock_price, Global.OType.CALL)
+    oP = Option(start, now, end, stock_price, Global.OType.PUT)
     p = oC.getMarketValue()
     p2 = oP.getMarketValue()
     s1 = Marketplace.get_yield_for_date(now)
@@ -22,6 +25,14 @@ def main():
     print("Zins: " + str(s1))
     print("Vol: " + str(s2))
     print("StockPrice: " + str(s3))
+
+    d1 = HedgingDelta.calcNewDelta(oC)
+    d2 = HedgingDelta.calcNewDelta(oP)
+
+    print("Delta Call: " + str(d1))
+    print("Delta Put: " + str(d2))
+
+    
 
 if __name__ == "__main__":
     main()

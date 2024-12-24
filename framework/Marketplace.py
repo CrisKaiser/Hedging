@@ -1,7 +1,6 @@
 import pandas as pd
 from framework.BlackScholes import BlackScholes; 
 import csv
-from framework.VolatilitySurface import VolatilitySurface
 from framework.MonteCarlo import MonteCarlo
 
 file_path = r"data\interest_rates.csv"
@@ -122,7 +121,7 @@ class Marketplace:
         _sigma = Marketplace.getHistoricalVolatility(creation_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
-        st = MarketplacegetStockPriceOnDate(current_date)
+        st = Marketplace.getStockPriceOnDate(current_date)
         return bs.getBigPhiA(creation_date, current_date, expire_date, K, optionType, st)
 
     @staticmethod
