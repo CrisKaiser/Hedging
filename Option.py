@@ -2,14 +2,12 @@ from framework.Marketplace import Marketplace
 
 class Option:
     _creation_date = None
-    _current_date = None
     _expire_date = None
     _K = None
     _optionType = None
 
-    def __init__(self, creation_date, current_date, expire_date, K, optionType):
+    def __init__(self, creation_date, expire_date, K, optionType):
         self._creation_date = creation_date
-        self._current_date = current_date
         self._expire_date = expire_date
         self._K = K
         self._optionType = optionType
@@ -26,31 +24,31 @@ class Option:
     def getOptionType(self):
         return self._optionType
 
-    def getMarketValue(self):
-        return Marketplace.getMarketOptionPrice(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+    def getMarketValue(self, current_date):
+        return Marketplace.getMarketOptionPrice(self._creation_date, current_date, self._expire_date, self._K, self._optionType)
         
-    def getMonteCarloValue(self):
-        return Marketplace.getMonteCarloPrice(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+    def getMonteCarloValue(self, current_date):
+        return Marketplace.getMonteCarloPrice(self._creation_date, current_date, self._expire_date, self._K, self._optionType)
 
-    def getMonteCarloHedgingPricePairs(self, h):
-        return Marketplace.getMonteCarloHedgingPricePairs(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType, h)
+    def getMonteCarloHedgingPricePairs(self, h, current_date):
+        return Marketplace.getMonteCarloHedgingPricePairs(self._creation_date, current_date, self._expire_date, self._K, self._optionType, h)
 
-    def getTheta(self):
-        return Marketplace.getMarketOptionTheta(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+    def getTheta(self, current_date):
+        return Marketplace.getMarketOptionTheta(self._creation_date, current_date, self._expire_date, self._K, self._optionType)
 
-    def getGamma(self):
-        return Marketplace.getMarketOptionGamma(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+    def getGamma(self, current_date):
+        return Marketplace.getMarketOptionGamma(self._creation_date, current_date, self._expire_date, self._K, self._optionType)
 
-    def getVega(self):
-        return Marketplace.getMarketOptionVega(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+    def getVega(self, current_date):
+        return Marketplace.getMarketOptionVega(self._creation_date, current_date, self._expire_date, self._K, self._optionType)
 
-    def getRho(self):
-        return Marketplace.getMarketOptionRho(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+    def getRho(self, current_date):
+        return Marketplace.getMarketOptionRho(self._creation_date, current_date, self._expire_date, self._K, self._optionType)
 
-    def getGreeks(self):
-        return Marketplace.getMarketOptionGreeks(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+    def getGreeks(self, current_date):
+        return Marketplace.getMarketOptionGreeks(self._creation_date, current_date, self._expire_date, self._K, self._optionType)
 
-    def getBigPhiA(self):
-        return Marketplace.getOptionBigPhiA(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
+    def getBigPhiA(self, current_date):
+        return Marketplace.getOptionBigPhiA(self._creation_date, current_date, self._expire_date, self._K, self._optionType)
 
     

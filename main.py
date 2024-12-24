@@ -12,16 +12,16 @@ def main():
 
     stock_price = 600.174788539206
     
-    oC = Option(start, now, end, stock_price, Global.OType.CALL)
-    oP = Option(start, now, end, stock_price, Global.OType.PUT)
-    p = oC.getMarketValue()
-    p2 = oP.getMarketValue()
+    oC = Option(start, end, stock_price, Global.OType.CALL)
+    oP = Option(start, end, stock_price, Global.OType.PUT)
+    p = oC.getMarketValue(now)
+    p2 = oP.getMarketValue(now)
     s1 = Marketplace.get_yield_for_date(now)
     s2 = Marketplace.getHistoricalVolatility(now)
     s3 = Marketplace.getStockPriceOnDate(now)
 
-    mcC = oC.getMonteCarloValue()
-    mcP = oP.getMonteCarloValue()
+    mcC = oC.getMonteCarloValue(now)
+    mcP = oP.getMonteCarloValue(now)
 
     print("Option CALL Price: " + str(p))
     print("Option PUT Price: " + str(p2))
@@ -31,16 +31,16 @@ def main():
     print("Vol: " + str(s2))
     print("StockPrice: " + str(s3))
 
-    d1 = HedgingDelta.calcNewDelta(oC)
-    d2 = HedgingDelta.calcNewDelta(oP)
+    d1 = HedgingDelta.calcNewDelta(oC, now)
+    d2 = HedgingDelta.calcNewDelta(oP, now)
 
     print("Delta Call: " + str(d1))
     print("Delta Put: " + str(d2))
 
     Global.HEDGING_MODE = 1
 
-    md1 = HedgingDelta.calcNewDelta(oC)
-    md2 = HedgingDelta.calcNewDelta(oP)
+    md1 = HedgingDelta.calcNewDelta(oC, now)
+    md2 = HedgingDelta.calcNewDelta(oP, now)
 
     print("Delta MC Call: " + str(md1))
     print("Delta MC Put: " + str(md2))

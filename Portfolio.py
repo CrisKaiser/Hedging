@@ -1,44 +1,45 @@
 
+from framework.Marketplace import Marketplace
+from framework.HedgingDelta import HedgingDelta
+
 class Portfolio:
-    _assetQuantity = 0.0
-    _optionContainer = []
+    _delta = None
+    _option = None
 
 
-    def __init__(self):
+    def __init__(self, creation_date):
         pass
 
-    def update(self):
+    def update(self, current_date):
         #{
-            #update asset quantity and Options
+            #1. Löse Portfoliopositon auf
+            #2. Erwerbe neuen Optionsschein
+            #3. 
         #}
         pass
 
     def getValue(self, current_date):
-        # {
-            #return Value of the Portfolio
-        # }
-        pass
+        return _option.getMarketValue(current_date) + _delta * Marketplace.getStockPriceOnDate(current_date)
 
-    def getPortfolioGamma(self):
-        #{
-            #update portfolio gamma
-        #}
-        pass
+    def getPortfolioGamma(self, current_date):
+        if self._option == None:
+            raise ValueError("Option is None!")
+        return _option.getGamma(current_date)
 
-    def getPortfolioVega(self):
-        #{
-            #update portfolio vega
-        #}
-        pass
+    def getPortfolioVega(self, current_date):
+        if self._option == None:
+            raise ValueError("Option is None!")
+        return _option.getVega(current_date)
 
-    def getPortfolioRho(self):
-        #{
-            #update portfolio rho
-        #}
-        pass
+    def getPortfolioRho(self, current_date):
+        if self._option == None:
+            raise ValueError("Option is None!")
+        return _option.getRho(current_date)
 
-    def getPortfolioTheta(self):
-        #{
-            #update portfolio theta
-        #}
-        pass
+    def getPortfolioTheta(self, current_date):
+        if self._option == None:
+            raise ValueError("Option is None!")
+        return _option.getTheta(current_date)
+
+    def updateDelta(current_date):
+        return HedgingDelta(self._option, current_date)
