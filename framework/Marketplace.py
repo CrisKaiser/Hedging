@@ -95,10 +95,10 @@ class Marketplace:
         return mc.calcOptionPrice(creation_date, current_date, expire_date, K, optionType, s0)
 
     @staticmethod
-    def getMonteCarloHedgingPrice(creation_date, current_date, expire_date, K, optionType, h):
+    def getMonteCarloHedgingPricePairs(creation_date, current_date, expire_date, K, optionType, h):
         mc = MonteCarlo()
-        s0 = Marketplace.getStockPriceOnDate(creation_date) + h
-        return mc.calcOptionPrice(creation_date, current_date, expire_date, K, optionType, s0)
+        s0 = Marketplace.getStockPriceOnDate(creation_date)
+        return mc.calcHedgingPricePairs(creation_date, current_date, expire_date, K, optionType, s0, h)
 
     @staticmethod
     def getStockPriceOnDate(target_date):

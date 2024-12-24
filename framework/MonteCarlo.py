@@ -10,12 +10,17 @@ class MonteCarlo:
     file_path = "data/bitcoin_2010-07-17_2024-12-15.csv"
 
     #default
-    _N = 100000
+    _N = 10000
     _sigma = 0.17314693165057277
     _mu = Global.EXP_RETURN
 
     def calcOptionPrice(self, creation_date, current_date, expire_date, K, optionType, s0):
         return np.exp( self.day_difference(expire_date, current_date) ) * self.monteCarlo(self._N, creation_date, expire_date, K, optionType, s0)
+
+    def calcHedgingPricePairs(self, creation_date, current_date, expire_date, K, optionType, s0, h):
+        c = np.exp( self.day_difference(expire_date, current_date) )
+        array = self.monteCarloHedging(self._N, creation_date, expire_date, K, optionType, s0, h)
+        return  [array[0] *c, array[1] * c]
 
     def monteCarlo(self, N, creation_date, expire_date, K, optionType, s0):
         _sum = 0
@@ -25,6 +30,19 @@ class MonteCarlo:
             _z1 = self.bigLambda(creation_date, expire_date, K, optionType, s0, -z)
             _sum += (_z0 + _z1) / 2.0
         return (1. / self._N) * _sum
+
+    def monteCarloHedging(self, N, creation_date, expire_date, K, optionType, s0, h):
+        _sumVh = 0.0
+        _sumV = 0.0
+        for i in range(self._N):
+            z = self.getZ()
+            _z0 = self.bigLambda(creation_date, expire_date, K, optionType, s0, z)
+            _z1 = self.bigLambda(creation_date, expire_date, K, optionType, s0, -z)
+            _z0H = self.bigLambda(creation_date, expire_date, K, optionType, s0 + h, z)
+            _z1H = self.bigLambda(creation_date, expire_date, K, optionType, s0 + h, -z)
+            _sumVh += (_z0H + _z1H) / 2.0
+            _sumV += (_z0 + _z1) / 2.0
+        return [(1. / self._N) * _sumVh ,(1. / self._N) * _sumV]
 
     def bigLambda(self, creation_date, expire_date, K, optionType, s0, z):
         T = self.day_difference(creation_date, expire_date)

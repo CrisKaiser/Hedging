@@ -32,8 +32,8 @@ class Option:
     def getMonteCarloValue(self):
         return Marketplace.getMonteCarloPrice(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)
 
-    def getMonteCarloHedgingValue(self, h):
-        return Marketplace.getMonteCarloHedgingPrice(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType, h)
+    def getMonteCarloHedgingPricePairs(self, h):
+        return Marketplace.getMonteCarloHedgingPricePairs(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType, h)
 
     def getTheta(self):
         return Marketplace.getMarketOptionTheta(self._creation_date, self._current_date, self._expire_date, self._K, self._optionType)

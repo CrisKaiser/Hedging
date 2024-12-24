@@ -15,6 +15,5 @@ class HedgingDelta:
 
         elif Global.HEDGING_MODE == 1:
             h = 0.4
-            Vh = option.getMonteCarloHedgingValue(h)
-            V = option.getMonteCarloValue()
-            return (Vh - V) / h
+            array = option.getMonteCarloHedgingPricePairs(h)
+            return (array[0] - array[1]) / h
