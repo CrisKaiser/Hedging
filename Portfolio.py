@@ -8,15 +8,6 @@ class Portfolio:
     _delta = None
     _option = None
 
-    def __init__(self):
-        self.setUpPortfolio()
-
-    def setUpPortfolio(self):
-        _expire_date = None #to be implemented: = GLobal.Start_date + 2days 
-        _K = Marketplace.getStockPriceOnDate(Global.START_DATE)
-        self._option = Option(Global.START_DATE, _expire_date, _K, Global.OType.CALL) #Call as default
-        self._delta = HedgingDelta(self._option, Global.START_DATE)
-
     def update(self, current_date, optionType):
         revenue = self.getValue()
         #{
@@ -28,7 +19,16 @@ class Portfolio:
         return revenue - invest
 
     def getValue(self, current_date):
-        return _option.getMarketValue(current_date) + _delta * Marketplace.getStockPriceOnDate(current_date)
+        if self._delta == None && self._option == None:
+            return 0.0
+        else:
+            return _option.getMarketValue(current_date) + _delta * Marketplace.getStockPriceOnDate(current_date)
+
+    def getValueDistribution(self, current_date):
+        if self._delta == None && self._option == None:
+            return 0.0
+        else:
+            return [_option.getMarketValue(current_date) , _delta * Marketplace.getStockPriceOnDate(current_date) ]
 
     def getPortfolioGamma(self, current_date):
         if self._option == None:
@@ -49,6 +49,9 @@ class Portfolio:
         if self._option == None:
             raise ValueError("Option is None!")
         return _option.getTheta(current_date)
+
+    def getPortfolioDelta(self):
+        return self._delta
 
     def updateDelta(current_date):
         return HedgingDelta(self._option, current_date)

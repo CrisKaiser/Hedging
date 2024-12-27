@@ -1,7 +1,8 @@
 
 class Dynamics:
-    
     _equity = None
+    _hedging_type = Global.OType.CALL
+    _current_date = Global.START_DATE
 
     def __init__(self, equity):
         if equity == None:
@@ -9,14 +10,23 @@ class Dynamics:
         self._equity = equity
 
     def run(self):
-        pass
-        
-    def portfolioUpdate(self):
         #{
-            #-neuen Portfoliostand setzen
+            #while(self.current_date <= Global.END_DATE):
+                #equityUpdate()
+                #self.current_date += 1
         #}
+        
+    def equityUpdate(self):
+        self.updateHedgingType()
+        self._equity.update(_hedging_type, )
 
     def sensitivityCheck(self):
         #{
             #-löse Portfolioposition auf nach bestimmten Kriterien
         #}
+
+    def updateHedgingType(self):
+        #{
+            #-switch between Call and Put hedging depending on criteria
+        #}
+        self._hedging_type = Global.OType.CALL ###to be implemented
