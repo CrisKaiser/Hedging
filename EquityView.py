@@ -1,5 +1,5 @@
 
-class PortfolioView:
+class EquityView:
 
     _equity = None
 

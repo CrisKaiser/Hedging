@@ -1,7 +1,14 @@
 
 class Dynamics:
-    	
-    def __init__(self):
+    
+    _equity = None
+
+    def __init__(self, equity):
+        if equity == None:
+            raise ValueError("Equity is null")
+        self._equity = equity
+
+    def run(self):
         pass
         
     def portfolioUpdate(self):
