@@ -1,5 +1,6 @@
 
 import Global
+from framework.DateCalc import DateCalc
 
 class Dynamics:
     _equity = None
@@ -12,12 +13,13 @@ class Dynamics:
         self._equity = equity
 
     def run(self):
-        pass
-        #{
-            #while(self.current_date <= Global.END_DATE):
-                #equityUpdate()
-                #self.current_date += 1
-        #}
+        while(not DateCalc.areDatesEqual(self._current_date, Global.END_DATE)):
+
+            print(str(self._equity.getPortfolioValue(self._current_date)) + " " +  str(self._equity.getClearingAccountBalance()) + " "+ str(self._equity.getEquity(self._current_date)))
+            self.equityUpdate()
+            self._current_date = DateCalc.getDateNDaysAfter(self._current_date, 1)
+           
+        print("done")
         
     def equityUpdate(self):
         self.updateHedgingType()

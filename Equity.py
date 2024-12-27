@@ -19,7 +19,7 @@ class Equity:
         self.notifyViews()
 
     def getEquity(self, current_date):
-        return portfolio.getValue(current_date) + clearingAcc.getBalance()
+        return self.portfolio.getValue(current_date) + self.clearingAcc.getBalance()
 
     def getPortfolio(self):
         return self.portfolio
@@ -42,6 +42,6 @@ class Equity:
     def viewRegister(self, view):
         self._views.append(view)
 
-    def notifyViews():
+    def notifyViews(self):
         for view in self._views:
             view.updateView()

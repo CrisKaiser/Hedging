@@ -18,7 +18,7 @@ def main():
     portfolioValueView = PortfolioValueView(equity.getPortfolio())
     #------------
 
-    
+    dynamics.run()
 
 if __name__ == "__main__":
     main()

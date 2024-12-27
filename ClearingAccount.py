@@ -7,22 +7,22 @@ class ClearingAccount:
     _views = []
 
     def updateBalance(self, value):
-        _balance += value
+        self._balance += value
 
     def getBalance(self):
-        return _balance
+        return self._balance
 
     def interestUpdate(self, date):
         y = Marketplace.get_yield_for_date(date)
         #for daily update! Geomtric mean!#
         dYield = math.pow(1.0 + y, 1.0/365)
-        _balance *= (1.0 + dYield)    
+        self._balance *= dYield    
         self.notifyViews()
 
     def viewRegister(self, view):
         self._views.append(view)
 
-    def notifyViews():
+    def notifyViews(self):
         for view in self._views:
             view.updateView()
 
