@@ -9,8 +9,8 @@ class Equity:
     _views = []
 
     def __init__(self):
-        portfolio = Portfolio()
-        clearingAcc = ClearingAccount()
+        self.portfolio = Portfolio()
+        self.clearingAcc = ClearingAccount()
 
     def update(self, current_date, optionType):
         _revenue = self.portfolio.update(current_date, optionType)

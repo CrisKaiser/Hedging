@@ -1,4 +1,6 @@
 
+import Global
+
 class Dynamics:
     _equity = None
     _hedging_type = Global.OType.CALL
@@ -10,6 +12,7 @@ class Dynamics:
         self._equity = equity
 
     def run(self):
+        pass
         #{
             #while(self.current_date <= Global.END_DATE):
                 #equityUpdate()
@@ -18,12 +21,13 @@ class Dynamics:
         
     def equityUpdate(self):
         self.updateHedgingType()
-        self._equity.update(_hedging_type, )
+        self._equity.update(self._current_date, self._hedging_type)
 
     def sensitivityCheck(self):
         #{
             #-löse Portfolioposition auf nach bestimmten Kriterien
         #}
+        pass
 
     def updateHedgingType(self):
         #{

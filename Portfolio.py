@@ -8,7 +8,7 @@ class Portfolio:
     _delta = None
     _option = None
 
-    _view = []
+    _views = []
 
     def update(self, current_date, optionType):
         revenue = self.getValue()
@@ -22,13 +22,13 @@ class Portfolio:
         return revenue - invest
 
     def getValue(self, current_date):
-        if self._delta == None && self._option == None:
+        if self._delta == None and self._option == None:
             return 0.0
         else:
             return _option.getMarketValue(current_date) + _delta * Marketplace.getStockPriceOnDate(current_date)
 
     def getValueDistribution(self, current_date):
-        if self._delta == None && self._option == None:
+        if self._delta == None and self._option == None:
             return 0.0
         else:
             return [_option.getMarketValue(current_date) , _delta * Marketplace.getStockPriceOnDate(current_date) ]

@@ -1,5 +1,4 @@
 
-import Global
 from Equity import Equity
 from Dynamics import Dynamics
 from views.ClearingAccountView import ClearingAccountView
@@ -7,6 +6,8 @@ from views.EquityView import EquityView
 from views.PortfolioDeltaView import PortfolioDeltaView
 from views.PortfolioDistrView import PortfolioDistrView
 from views.PortfolioValueView import PortfolioValueView
+
+from framework.Marketplace import Marketplace
 
 def main():
     equity = Equity() #model
@@ -19,6 +20,7 @@ def main():
     portfolioValueView = PortfolioValueView(equity.getPortfolio())
     #------------
 
+    
 
 
     
