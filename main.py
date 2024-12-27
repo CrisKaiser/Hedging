@@ -7,8 +7,6 @@ from views.PortfolioDeltaView import PortfolioDeltaView
 from views.PortfolioDistrView import PortfolioDistrView
 from views.PortfolioValueView import PortfolioValueView
 
-from framework.Marketplace import Marketplace
-
 def main():
     equity = Equity() #model
     dynamics = Dynamics(equity) #controler
@@ -20,10 +18,6 @@ def main():
     portfolioValueView = PortfolioValueView(equity.getPortfolio())
     #------------
 
-
-    date = "2014-01-01"
-    p = Marketplace.get_yield_for_date(date)
-    print(p)
     
 
 if __name__ == "__main__":
