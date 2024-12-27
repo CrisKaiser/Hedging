@@ -4,6 +4,7 @@ import math
 
 class ClearingAccount:
     _balance = 0.0
+    _views = []
 
     def updateBalance(self, value):
         _balance += value
@@ -16,3 +17,12 @@ class ClearingAccount:
         #for daily update! Geomtric mean!#
         dYield = math.pow(1.0 + y, 1.0/365)
         _balance *= (1.0 + dYield)    
+        self.notifyViews()
+
+    def viewRegister(self, view):
+        self._views.append(view)
+
+    def notifyViews():
+        for view in self._views:
+            view.updateView()
+

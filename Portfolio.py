@@ -8,6 +8,8 @@ class Portfolio:
     _delta = None
     _option = None
 
+    _view = []
+
     def update(self, current_date, optionType):
         revenue = self.getValue()
         #{
@@ -16,6 +18,7 @@ class Portfolio:
             #3. 
         #}
         invest = self.getValue()
+        self.notifyViews()
         return revenue - invest
 
     def getValue(self, current_date):
@@ -55,3 +58,10 @@ class Portfolio:
 
     def updateDelta(current_date):
         return HedgingDelta(self._option, current_date)
+
+    def viewRegister(self, view):
+        self._views.append(view)
+
+    def notifyViews():
+        for view in self._views:
+            view.updateView()

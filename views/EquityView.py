@@ -7,3 +7,6 @@ class EquityView:
         if equity == None:
             raise ValueError("Equity is null")
         self._equity = equity
+
+    def updateView(self):
+        pass

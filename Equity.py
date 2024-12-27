@@ -6,6 +6,8 @@ class Equity:
     portfolio = None
     clearingAcc = None
 
+    _views = []
+
     def __init__(self):
         portfolio = Portfolio()
         clearingAcc = ClearingAccount()
@@ -14,6 +16,7 @@ class Equity:
         _revenue = self.portfolio.update(current_date, optionType)
         self.clearingAcc.updateBalance(_revenue)
         self.clearingAcc.interestUpdate(current_date)
+        self.notifyViews()
 
     def getEquity(self, current_date):
         return portfolio.getValue(current_date) + clearingAcc.getBalance()
@@ -36,5 +39,9 @@ class Equity:
     def getPortfolioValueDistribution(self, current_date):
         return self.portfolio.getValueDistribution(current_date) #[value option, value asset]
     
+    def viewRegister(self, view):
+        self._views.append(view)
 
-
+    def notifyViews():
+        for view in self._views:
+            view.updateView()
