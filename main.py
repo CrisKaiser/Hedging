@@ -20,9 +20,10 @@ def main():
     portfolioValueView = PortfolioValueView(equity.getPortfolio())
     #------------
 
-    
 
-
+    date = "2014-01-01"
+    p = Marketplace.get_yield_for_date(date)
+    print(p)
     
 
 if __name__ == "__main__":

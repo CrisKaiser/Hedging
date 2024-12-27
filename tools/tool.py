@@ -10,9 +10,9 @@ changes = [
     ("2011-12-08", 0.01),
     ("2012-07-05", 0.0075),
     ("2013-05-02", 0.005),
-    ("2013-11-07", 0.0025),
-    ("2014-06-05", 0.0015),
-    ("2014-09-04", 0.0005),
+    ("2013-11-07", 0.025),
+    ("2014-06-05", 0.015),
+    ("2014-09-04", 0.005),
     ("2016-03-10", 0.0),
     ("2022-07-21", 0.005),
     ("2022-09-08", 0.0125),
@@ -64,8 +64,8 @@ with open(file_path, mode='w', newline='') as file:
             current_yield = changes[change_index][1]
             change_index += 1
 
-        # Manuelles Formatieren des Datums ohne führende Nullen
-        date_str = f"{current_date.year}-{current_date.month}-{current_date.day}"
+        # Formatieren des Datums im Format YYYY-MM-DD
+        date_str = current_date.strftime('%Y-%m-%d')
         writer.writerow([date_str, current_yield])
 
         current_date += timedelta(days=1)
