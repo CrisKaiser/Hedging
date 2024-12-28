@@ -25,7 +25,7 @@ class Portfolio:
             self._option = Option(current_date, _expire_date, _K, optionType)
             self.updateDelta(current_date)
             invest = self.getValue(current_date)
-            self.notifyViews()
+            self.notifyViews(current_date)
             return revenue - invest
 
     def getValue(self, current_date):
@@ -69,6 +69,6 @@ class Portfolio:
     def viewRegister(self, view):
         self._views.append(view)
 
-    def notifyViews(self):
+    def notifyViews(self, current_date):
         for view in self._views:
-            view.updateView()
+            view.updateView(current_date)

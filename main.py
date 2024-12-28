@@ -3,7 +3,7 @@ from Equity import Equity
 from Dynamics import Dynamics
 from views.ClearingAccountView import ClearingAccountView
 from views.EquityView import EquityView
-from views.PortfolioDeltaView import PortfolioDeltaView
+from views.EquityGreekView import EquityGreekView
 from views.PortfolioDistrView import PortfolioDistrView
 from views.PortfolioValueView import PortfolioValueView
 
@@ -18,14 +18,15 @@ def main():
     #---views----
     clearingAccountView = ClearingAccountView(equity.getClearingAccount())
     equityView = EquityView(equity)
-    portfolioDeltaView = PortfolioDeltaView(equity.getPortfolio())
+    equityGreekView = EquityGreekView(equity)
     portfolioDistrView = PortfolioDistrView(equity.getPortfolio())
     portfolioValueView = PortfolioValueView(equity.getPortfolio())
     #------------
 
     dynamics.run()
     #equityView.draw()
-    equityView.drawStockAndEquity()
+    #equityView.drawStockAndEquity()
+    equityGreekView.draw()
     # o = Option(Global.START_DATE, DateCalc.getDateNDaysAfter(Global.START_DATE, 2), Marketplace.getStockPriceOnDate(Global.START_DATE), Global.OType.CALL)
     # print(o.getMarketValue(DateCalc.getDateNDaysAfter(Global.START_DATE, 1)))
 

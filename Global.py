@@ -2,10 +2,10 @@ from enum import Enum
 
 EXP_RETURN = 0.02 #=expected asset drift
 HEDGING_MODE = 0 #0 -> Black-Scholes, 1-> Monte-Carlo
-MATURTIY = 10
+MATURTIY = 30
 VOLATILITY_PREMIUM = 0.2
-START_DATE = "2017-12-16"
-END_DATE = "2018-09-19"
+START_DATE = "2020-12-06"
+END_DATE = "2021-12-10"
 
 class OType(Enum):
     PUT = 0
