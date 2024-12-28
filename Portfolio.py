@@ -32,7 +32,7 @@ class Portfolio:
         if self._delta == None and self._option == None:
             return 0.0
         else:
-            return self._option.getMarketValue(current_date) + self._delta * Marketplace.getStockPriceOnDate(current_date)
+            return self._option.getMarketValue(current_date) + abs(self._delta) * Marketplace.getStockPriceOnDate(current_date)
 
     def getValueDistribution(self, current_date):
         if self._delta == None and self._option == None:

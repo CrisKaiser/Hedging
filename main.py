@@ -7,6 +7,11 @@ from views.PortfolioDeltaView import PortfolioDeltaView
 from views.PortfolioDistrView import PortfolioDistrView
 from views.PortfolioValueView import PortfolioValueView
 
+from Option import Option
+from framework.DateCalc import DateCalc
+from framework.Marketplace import Marketplace
+import Global
+
 def main():
     equity = Equity() #model
     dynamics = Dynamics(equity) #controler
@@ -19,6 +24,13 @@ def main():
     #------------
 
     dynamics.run()
+
+    # o = Option(Global.START_DATE, DateCalc.getDateNDaysAfter(Global.START_DATE, 2), Marketplace.getStockPriceOnDate(Global.START_DATE), Global.OType.CALL)
+    # print(o.getMarketValue(DateCalc.getDateNDaysAfter(Global.START_DATE, 1)))
+
+    # s = Global.States.STRONG_CALL
+    # q = Global.States(s.value + 1)
+    # print(q)
 
 if __name__ == "__main__":
     main()

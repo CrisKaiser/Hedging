@@ -1,11 +1,13 @@
 
 import Global
 from framework.DateCalc import DateCalc
+from framework.Marketplace import Marketplace
 
 class Dynamics:
     _equity = None
-    _hedging_type = Global.OType.CALL
+    _hedging_type = None #Global.OType.CALL
     _current_date = Global.START_DATE
+    _hedgingState = Global.States.WEAK_CALL
 
     def __init__(self, equity):
         if equity == None:
@@ -14,8 +16,10 @@ class Dynamics:
 
     def run(self):
         while(not DateCalc.areDatesEqual(self._current_date, Global.END_DATE)):
-
-            print(str(self._equity.getPortfolioValue(self._current_date)) + " " +  str(self._equity.getClearingAccountBalance()) + " "+ str(self._equity.getEquity(self._current_date)))
+            
+            self.updateState(self._current_date)
+            self.updateHedgingType()
+            print(str(self._equity.getPortfolioValue(self._current_date)) + " " +  str(self._equity.getClearingAccountBalance()) + " "+ str(self._equity.getEquity(self._current_date)) + "hedged with: " + str(self._hedging_type))
             self.equityUpdate()
             self._current_date = DateCalc.getDateNDaysAfter(self._current_date, 1)
            
@@ -32,7 +36,25 @@ class Dynamics:
         pass
 
     def updateHedgingType(self):
-        #{
-            #-switch between Call and Put hedging depending on criteria
-        #}
-        self._hedging_type = Global.OType.CALL ###to be implemented
+        if self._hedgingState == Global.States.STRONG_CALL or self._hedgingState == Global.States.WEAK_CALL:
+            self._hedging_type = Global.OType.CALL
+        else:
+            self._hedging_type = Global.OType.PUT
+
+    def updateState(self, current_date):
+        if self.isStockIncreasing(current_date):
+            newStateValue = self.clamp((self._hedgingState.value + 1), 0, 3)
+            self._hedgingState = Global.States(newStateValue)
+        else:
+            newStateValue = self.clamp((self._hedgingState.value - 1), 0, 3)
+            self._hedgingState = Global.States(newStateValue)
+
+    def isStockIncreasing(self, current_date):
+        _yesterday = DateCalc.getDateNDaysAfter(current_date, -1)
+        if Marketplace.getStockPriceOnDate(current_date) > Marketplace.getStockPriceOnDate(_yesterday):
+            return True
+        else:
+            return False
+
+    def clamp(self, value, min_value, max_value):
+        return max(min_value, min(value, max_value))
