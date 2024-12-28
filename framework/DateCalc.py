@@ -20,3 +20,10 @@ class DateCalc:
         date1_obj = datetime.strptime(date1, '%Y-%m-%d')
         date2_obj = datetime.strptime(date2, '%Y-%m-%d')
         return date1_obj == date2_obj
+
+    @staticmethod
+    def daysBetweenDates(date1, date2):
+        date1_obj = datetime.strptime(date1, '%Y-%m-%d')
+        date2_obj = datetime.strptime(date2, '%Y-%m-%d')
+        delta = abs(date2_obj - date1_obj)
+        return delta.days

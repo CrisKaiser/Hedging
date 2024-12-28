@@ -24,7 +24,8 @@ def main():
     #------------
 
     dynamics.run()
-
+    #equityView.draw()
+    equityView.drawStockAndEquity()
     # o = Option(Global.START_DATE, DateCalc.getDateNDaysAfter(Global.START_DATE, 2), Marketplace.getStockPriceOnDate(Global.START_DATE), Global.OType.CALL)
     # print(o.getMarketValue(DateCalc.getDateNDaysAfter(Global.START_DATE, 1)))
 

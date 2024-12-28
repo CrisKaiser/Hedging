@@ -2,6 +2,7 @@ import pandas as pd
 from framework.BlackScholes import BlackScholes; 
 import csv
 from framework.MonteCarlo import MonteCarlo
+import Global
 
 file_path = r"data\interest_rates.csv"
 file_path_stock = r"data\bitcoin_2010-07-17_2024-12-15.csv"
@@ -65,7 +66,7 @@ class Marketplace:
 
             if not result.empty:
                 yield_value = result.iloc[0]['yield']
-                return yield_value
+                return yield_value + Global.VOLATILITY_PREMIUM
             else:
                 print(f"No entry found {search_date}.")
 
