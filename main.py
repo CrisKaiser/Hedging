@@ -1,10 +1,8 @@
 
 from Equity import Equity
 from Dynamics import Dynamics
-from views.ClearingAccountView import ClearingAccountView
 from views.EquityView import EquityView
 from views.EquityGreekView import EquityGreekView
-from views.PortfolioDistrView import PortfolioDistrView
 from views.PortfolioValueView import PortfolioValueView
 
 from Option import Option
@@ -16,23 +14,16 @@ def main():
     equity = Equity() #model
     dynamics = Dynamics(equity) #controler
     #---views----
-    clearingAccountView = ClearingAccountView(equity.getClearingAccount())
     equityView = EquityView(equity)
     equityGreekView = EquityGreekView(equity)
-    portfolioDistrView = PortfolioDistrView(equity.getPortfolio())
     portfolioValueView = PortfolioValueView(equity.getPortfolio())
     #------------
 
     dynamics.run()
-    #equityView.draw()
-    #equityView.drawStockAndEquity()
-    equityGreekView.draw()
-    # o = Option(Global.START_DATE, DateCalc.getDateNDaysAfter(Global.START_DATE, 2), Marketplace.getStockPriceOnDate(Global.START_DATE), Global.OType.CALL)
-    # print(o.getMarketValue(DateCalc.getDateNDaysAfter(Global.START_DATE, 1)))
+    equityView.drawStockAndEquity()
 
-    # s = Global.States.STRONG_CALL
-    # q = Global.States(s.value + 1)
-    # print(q)
+    s = Marketplace.getImpliedVolatility("2023-10-11")
+    print(s)
 
 if __name__ == "__main__":
     main()

@@ -3,16 +3,22 @@ from framework.BlackScholes import BlackScholes;
 import csv
 from framework.MonteCarlo import MonteCarlo
 import Global
+from framework.DateCalc import DateCalc
 
 file_path = r"data\interest_rates.csv"
 file_path_stock = r"data\bitcoin_2010-07-17_2024-12-15.csv"
 file_path_volatility = r"data\bitcoin_volatility.csv"
+file_path_implied_volatility = r"data\dvol_data.csv"
 
 class Marketplace:
 
     @staticmethod
     def getMarketOptionPrice(creation_date, current_date, expire_date, K, optionType):
-        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _sigma = None
+        if Global.VOLATILTY_MODE == 1:
+            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        else:
+            _sigma = Marketplace.getHistoricalVolatility(creation_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         st = Marketplace.getStockPriceOnDate(current_date)
@@ -20,7 +26,11 @@ class Marketplace:
 
     @staticmethod
     def getMarketOptionTheta(creation_date, current_date, expire_date, K, optionType):
-        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _sigma = None
+        if Global.VOLATILTY_MODE == 1:
+            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        else:
+            _sigma = Marketplace.getHistoricalVolatility(creation_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
@@ -29,7 +39,11 @@ class Marketplace:
 
     @staticmethod
     def getMarketOptionGamma(creation_date, current_date, expire_date, K, optionType):
-        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _sigma = None
+        if Global.VOLATILTY_MODE == 1:
+            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        else:
+            _sigma = Marketplace.getHistoricalVolatility(creation_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
@@ -38,7 +52,11 @@ class Marketplace:
 
     @staticmethod
     def getMarketOptionVega(creation_date, current_date, expire_date, K, optionType):
-        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _sigma = None
+        if Global.VOLATILTY_MODE == 1:
+            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        else:
+            _sigma = Marketplace.getHistoricalVolatility(creation_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
@@ -47,7 +65,11 @@ class Marketplace:
 
     @staticmethod
     def getMarketOptionRho(creation_date, current_date, expire_date, K, optionType):
-        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _sigma = None
+        if Global.VOLATILTY_MODE == 1:
+            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        else:
+            _sigma = Marketplace.getHistoricalVolatility(creation_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         st = Marketplace.getStockPriceOnDate(current_date)
@@ -66,7 +88,7 @@ class Marketplace:
 
             if not result.empty:
                 yield_value = result.iloc[0]['yield']
-                return yield_value + Global.VOLATILITY_PREMIUM
+                return yield_value
             else:
                 print(f"No entry found {search_date}.")
 
@@ -77,7 +99,11 @@ class Marketplace:
 
     @staticmethod
     def getMarketOptionGreeks(creation_date, current_date, expire_date, K, optionType):
-        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _sigma = None
+        if Global.VOLATILTY_MODE == 1:
+            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        else:
+            _sigma = Marketplace.getHistoricalVolatility(creation_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
@@ -125,7 +151,11 @@ class Marketplace:
 
     @staticmethod
     def getOptionBigPhiA(creation_date, current_date, expire_date, K, optionType):
-        _sigma = Marketplace.getHistoricalVolatility(creation_date)
+        _sigma = None
+        if Global.VOLATILTY_MODE == 1:
+            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        else:
+            _sigma = Marketplace.getHistoricalVolatility(creation_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         st = Marketplace.getStockPriceOnDate(current_date)
@@ -140,7 +170,7 @@ class Marketplace:
                 for row in reader:
                     date = row.get('Datum')
                     if date == target_date:
-                        return float(row.get('Volatilität', 0))
+                        return float(row.get('Volatilität', 0)) + Global.VOLATILITY_PREMIUM
 
             print(f"Date {target_date} not found in the data.")
             return None 
@@ -149,6 +179,30 @@ class Marketplace:
             print(f"Could not find: {file_path_volatility}")
         except Exception as e:
             print(f"Could not load data: {e}")
+
+    @staticmethod
+    def getImpliedVolatility(search_date):
+        if DateCalc.isDateBefore(search_date, "2023-03-24"):
+            raise ValueError("No data before 2023-03-24 available!")
+        try:
+            df = pd.read_csv(file_path_implied_volatility)
+
+            if 'Date' not in df.columns or 'DVOL' not in df.columns:
+                print("Column not found")
+                return
+
+            result = df[df['Date'] == search_date]
+
+            if not result.empty:
+                vol = result.iloc[0]['DVOL']
+                return vol * 0.01
+            else:
+                print(f"No entry found {search_date}.")
+
+        except FileNotFoundError:
+            print(f"File not found: {file_path_implied_volatility}.")
+        except Exception as e:
+            print(f"Error: {e}")
 
 
 
