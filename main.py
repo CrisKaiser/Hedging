@@ -1,8 +1,10 @@
 
 from Equity import Equity
-from Dynamics import Dynamics
+from DynamicsI import DynamicsI
+from DynamicsII import DynamicsII
+from DynamicsIII import DynamicsIII
 from views.EquityView import EquityView
-from views.EquityGreekView import EquityGreekView
+from views.EquityNormalizedView import EquityNormalizedView
 from views.PortfolioValueView import PortfolioValueView
 
 from Option import Option
@@ -12,18 +14,15 @@ import Global
 
 def main():
     equity = Equity() #model
-    dynamics = Dynamics(equity) #controler
+    dynamics = DynamicsI(equity) #controler
     #---views----
     equityView = EquityView(equity)
-    equityGreekView = EquityGreekView(equity)
+    equityNormalizedView = EquityNormalizedView(equity)
     portfolioValueView = PortfolioValueView(equity.getPortfolio())
     #------------
 
     dynamics.run()
-    equityView.drawStockAndEquity()
-
-    s = Marketplace.getImpliedVolatility("2023-10-11")
-    print(s)
+    equityNormalizedView.drawStockAndEquity()
 
 if __name__ == "__main__":
     main()
