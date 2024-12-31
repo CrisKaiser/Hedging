@@ -30,7 +30,7 @@ class DynamicsI:
         
     def equityUpdate(self):
         self.updateHedgingType()
-        self._equity.rebuild(self._current_date, self._hedging_type)
+        self._equity.hedge(self._current_date, self._hedging_type)
 
     def sensitivityCheck(self):
         #{

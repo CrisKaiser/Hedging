@@ -29,7 +29,7 @@ class DynamicsII:
         
     def equityUpdate(self):
         self.updateHedgingType()
-        self._equity.rebuild(self._current_date, self._hedging_type)
+        self._equity.hedge(self._current_date, self._hedging_type)
 
     def sensitivityCheck(self):
         #{
@@ -41,13 +41,13 @@ class DynamicsII:
         if self._hedgingState == Global.StatesII.CALL:
             self._hedging_type = Global.OType.CALL
         else:
-            self._hedging_type = Global.OType.PUT
+            self._hedging_type = Global.OType.CALL
 
     def updateState(self, current_date):
         if self.isStockIncreasing(current_date):
             self._hedgingState = Global.StatesII.CALL
         else:
-            self._hedgingState = Global.StatesII.PUT
+            self._hedgingState = Global.StatesII.CALL
 
     def isStockIncreasing(self, current_date):
         _yesterday = DateCalc.getDateNDaysAfter(current_date, -1)

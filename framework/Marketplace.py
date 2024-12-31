@@ -14,15 +14,22 @@ class Marketplace:
 
     @staticmethod
     def getMarketOptionPrice(creation_date, current_date, expire_date, K, optionType):
-        _sigma = None
-        if Global.VOLATILTY_MODE == 1:
-            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        if DateCalc.isDateBefore(current_date, expire_date):
+            _sigma = None
+            if Global.VOLATILTY_MODE == 1:
+                _sigma = Marketplace.getImpliedVolatility(creation_date)
+            else:
+                _sigma = Marketplace.getHistoricalVolatility(creation_date)
+            _r = Marketplace.get_yield_for_date(current_date)
+            bs = BlackScholes(_r, _sigma)
+            st = Marketplace.getStockPriceOnDate(current_date)
+            return bs.calcOptionPrice(creation_date, current_date, expire_date, K, optionType, st)
         else:
-            _sigma = Marketplace.getHistoricalVolatility(creation_date)
-        _r = Marketplace.get_yield_for_date(current_date)
-        bs = BlackScholes(_r, _sigma)
-        st = Marketplace.getStockPriceOnDate(current_date)
-        return bs.calcOptionPrice(creation_date, current_date, expire_date, K, optionType, st)
+            stockPrice = Marketplace.getStockPriceOnDate(current_date)
+            if optionType == Global.OType.CALL:
+                return max(stockPrice - K, 0)
+            else:
+                return max(K - stockPrice, 0)
 
     @staticmethod
     def getMarketOptionTheta(creation_date, current_date, expire_date, K, optionType):

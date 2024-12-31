@@ -29,14 +29,25 @@ class Portfolio:
             return revenue - invest
 
     def updateHedging(self, current_date, optionType):
+        if self._option == None:
+            pass
+        else:
+            print(self._option)
+            st0 = str( self._option.getMarketValue(current_date) )
+            st1 = str( self._delta )
+            st2 = str( Marketplace.getStockPriceOnDate(current_date) )
+            st3 = str( self.getValue(current_date) ) 
+            print(st0 + " + " + st1 + " * " + st2 + " = " + st3)
+
+        if self._option == None:
+            self.rebuild(current_date, optionType)
         if DateCalc.isDateBefore(current_date, self._option.get_expire_date()):
-            _old_delta = self._delta
-            self._delta = HedgingDelta.calcNewDelta(self._option, current_date)
-            revenue = _old_delta * Marketplace.getStockPriceOnDate(current_date)
-            invest = self._delta * Marketplace.getStockPriceOnDate(current_date) 
+            revenue = self.getValue(current_date)
+            self.updateDelta(current_date)
+            invest = self.getValue(current_date)
             return revenue - invest
         else:
-            return = self.rebuild(current_date, optionType)
+            return self.rebuild(current_date, optionType)
 
     def getValue(self, current_date):
         if self._delta == None and self._option == None:
@@ -70,8 +81,10 @@ class Portfolio:
             raise ValueError("Option is None!")
         return self._option.getTheta(current_date)
 
-    def getPortfolioDelta(self):
-        return self._delta
+    def getPortfolioDelta(self, current_date):
+        if self._option == None:
+            return 0.0
+        return HedgingDelta.calcNewDelta(self._option, current_date)
 
     def updateDelta(self, current_date):
         self._delta = HedgingDelta.calcNewDelta(self._option, current_date)
