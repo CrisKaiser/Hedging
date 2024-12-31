@@ -3,11 +3,11 @@ import Global
 from framework.DateCalc import DateCalc
 from framework.Marketplace import Marketplace
 
-class DynamicsI:
+class DynamicsIV:
     _equity = None
     _hedging_type = None #Global.OType.CALL
     _current_date = Global.START_DATE
-    _hedgingState = Global.StatesI.WEAK_CALL
+    _hedgingState = Global.StatesIV.WEAK_CALL
 
     _hitCount = 0
 
@@ -20,12 +20,11 @@ class DynamicsI:
         while(not DateCalc.areDatesEqual(self._current_date, Global.END_DATE)):
             if (self.isStockIncreasing(self._current_date) and self._hedging_type == Global.OType.CALL) or (not self.isStockIncreasing(self._current_date) and self._hedging_type == Global.OType.PUT):
                 self._hitCount += 1
-
             self.updateState(self._current_date)
             self.updateHedgingType()
             self.equityUpdate()
             self._current_date = DateCalc.getDateNDaysAfter(self._current_date, 1)
-           
+            
         print("hit count: " + str(self._hitCount))
         
     def equityUpdate(self):
@@ -39,18 +38,18 @@ class DynamicsI:
         pass
 
     def updateHedgingType(self):
-        if self._hedgingState == Global.StatesI.STRONG_CALL or self._hedgingState == Global.StatesI.WEAK_CALL:
+        if self.isStockIncreasing(self._current_date):
             self._hedging_type = Global.OType.CALL
         else:
             self._hedging_type = Global.OType.PUT
 
     def updateState(self, current_date):
         if self.isStockIncreasing(current_date):
-            newStateValue = self.clamp((self._hedgingState.value + 1), 0, 3)
-            self._hedgingState = Global.StatesI(newStateValue)
+            newStateValue = self.clamp((self._hedgingState.value + 1), 0, 2)
+            self._hedgingState = Global.StatesIV(newStateValue)
         else:
-            newStateValue = self.clamp((self._hedgingState.value - 1), 0, 3)
-            self._hedgingState = Global.StatesI(newStateValue)
+            newStateValue = self.clamp((self._hedgingState.value - 1), 0, 2)
+            self._hedgingState = Global.StatesIV(newStateValue)
 
     def isStockIncreasing(self, current_date):
         _yesterday = DateCalc.getDateNDaysAfter(current_date, -1)

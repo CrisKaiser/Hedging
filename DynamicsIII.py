@@ -9,6 +9,8 @@ class DynamicsIII:
     _current_date = Global.START_DATE
     _hedgingState = Global.StatesIII.CALL
 
+    _hitCount = 0
+
     def __init__(self, equity):
         if equity == None:
             raise ValueError("Equity is null")
@@ -16,12 +18,14 @@ class DynamicsIII:
 
     def run(self):
         while(not DateCalc.areDatesEqual(self._current_date, Global.END_DATE)):
+            if (self.isStockIncreasing(self._current_date) and self._hedging_type == Global.OType.CALL) or (not self.isStockIncreasing(self._current_date) and self._hedging_type == Global.OType.PUT):
+                self._hitCount += 1
             self.updateState(self._current_date)
             self.updateHedgingType()
             self.equityUpdate()
             self._current_date = DateCalc.getDateNDaysAfter(self._current_date, 1)
-           
-        print("done")
+            
+        print("hit count: " + str(self._hitCount))
         
     def equityUpdate(self):
         self.updateHedgingType()
