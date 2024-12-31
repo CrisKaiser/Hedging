@@ -4,7 +4,7 @@ EXP_RETURN = 0.02 #=expected asset drift
 HEDGING_MODE = 0 #0 -> Black-Scholes, 1-> Monte-Carlo
 MATURTIY = 3000
 VOLATILITY_PREMIUM = 0.2
-START_DATE = "2023-03-25"
+START_DATE = "2024-10-25"
 END_DATE = "2024-12-10"
 VOLATILTY_MODE = 0 #0 -> IV, 1 -> HV
 

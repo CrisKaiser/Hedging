@@ -11,7 +11,7 @@ class Portfolio:
 
     _views = []
 
-    def update(self, current_date, optionType):
+    def rebuild(self, current_date, optionType):
         if DateCalc.areDatesEqual(current_date, Global.START_DATE):
             _K = Marketplace.getStockPriceOnDate(current_date)
             _expire_date = DateCalc.getDateNDaysAfter(current_date, Global.MATURTIY)
@@ -27,6 +27,16 @@ class Portfolio:
             invest = self.getValue(current_date)
             self.notifyViews(current_date)
             return revenue - invest
+
+    def updateHedging(self, current_date, optionType):
+        if DateCalc.isDateBefore(current_date, self._option.get_expire_date()):
+            _old_delta = self._delta
+            self._delta = HedgingDelta.calcNewDelta(self._option, current_date)
+            revenue = _old_delta * Marketplace.getStockPriceOnDate(current_date)
+            invest = self._delta * Marketplace.getStockPriceOnDate(current_date) 
+            return revenue - invest
+        else:
+            return = self.rebuild(current_date, optionType)
 
     def getValue(self, current_date):
         if self._delta == None and self._option == None:

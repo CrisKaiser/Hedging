@@ -12,8 +12,14 @@ class Equity:
         self.portfolio = Portfolio()
         self.clearingAcc = ClearingAccount()
 
-    def update(self, current_date, optionType):
-        _revenue = self.portfolio.update(current_date, optionType)
+    def rebuild(self, current_date, optionType):
+        _revenue = self.portfolio.rebuild(current_date, optionType)
+        self.clearingAcc.updateBalance(_revenue)
+        self.clearingAcc.interestUpdate(current_date)
+        self.notifyViews(current_date)
+
+    def hedge(self, current_date, optionType):
+        _revenue = self.portfolio.updateHedging(current_date, optionType)
         self.clearingAcc.updateBalance(_revenue)
         self.clearingAcc.interestUpdate(current_date)
         self.notifyViews(current_date)
