@@ -2,11 +2,12 @@ from enum import Enum
 
 EXP_RETURN = 0.02 #=expected asset drift
 HEDGING_MODE = 0 #0 -> Black-Scholes, 1-> Monte-Carlo
-MATURTIY = 10
+MATURTIY = 30
 VOLATILITY_PREMIUM = 0.2
 START_DATE = "2024-10-25"
 END_DATE = "2024-12-10"
 VOLATILTY_MODE = 0 #0 -> IV, 1 -> HV
+INITIAL_INVEST = 1000
 
 class OType(Enum):
     PUT = 0
@@ -29,5 +30,10 @@ class StatesIII(Enum):
 
 class StatesIV(Enum):
     STRONG_CALL = 2
-    WEAK_CALL = 1
-    PUT = 0
+    WEAK_CALL = 0, 1
+    PUT = -1
+
+class StatesV(Enum):
+    INVEST_CALL = 2
+    HEDGE_CALL = 1
+    HEDGE_PUT = 0

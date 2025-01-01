@@ -44,6 +44,9 @@ class Equity:
 
     def getPortfolioValueDistribution(self, current_date):
         return self.portfolio.getValueDistribution(current_date) #[value option, value asset]
+
+    def updatePortfolioHedgingLevel(self, new_level):
+        self.portfolio.updateHedgingLevel(new_level)
     
     def viewRegister(self, view):
         self._views.append(view)

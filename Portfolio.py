@@ -8,7 +8,8 @@ import Global
 class Portfolio:
     _delta = None
     _option = None
-
+    _hedging_level = Global.INITIAL_INVEST
+    _hedging_unit = None
     _views = []
 
     def rebuild(self, current_date, optionType):
@@ -17,6 +18,7 @@ class Portfolio:
             _expire_date = DateCalc.getDateNDaysAfter(current_date, Global.MATURTIY)
             self._option = Option(current_date, _expire_date, _K, optionType)
             self.updateDelta(current_date)
+            self.updateHedgingUnit(current_date)
             return 0.0
         elif DateCalc.isDateBefore(current_date, Global.END_DATE):
             revenue = self.getValue(current_date)
@@ -28,17 +30,10 @@ class Portfolio:
             self.notifyViews(current_date)
             return revenue - invest
 
-    def updateHedging(self, current_date, optionType):
-        if self._option == None:
-            pass
-        else:
-            print(self._option)
-            st0 = str( self._option.getMarketValue(current_date) )
-            st1 = str( self._delta )
-            st2 = str( Marketplace.getStockPriceOnDate(current_date) )
-            st3 = str( self.getValue(current_date) ) 
-            print(st0 + " + " + st1 + " * " + st2 + " = " + st3)
+    def updateHedgingLevel(self, new_level):
+        self._hedging_level = new_level
 
+    def updateHedging(self, current_date, optionType):
         if self._option == None:
             self.rebuild(current_date, optionType)
         if DateCalc.isDateBefore(current_date, self._option.get_expire_date()):
@@ -49,17 +44,23 @@ class Portfolio:
         else:
             return self.rebuild(current_date, optionType)
 
+    def updateHedgingUnit(self, current_date):
+        if self._delta == None or self._option == None:
+            raise ValueError("Null not allowed")
+        else:
+            self._hedging_unit = Global.INITIAL_INVEST / (self._option.getMarketValue(current_date) + abs(self._delta) * Marketplace.getStockPriceOnDate(current_date))
+
     def getValue(self, current_date):
-        if self._delta == None and self._option == None:
+        if self._delta == None or self._option == None:
             return 0.0
         else:
-            return self._option.getMarketValue(current_date) + abs(self._delta) * Marketplace.getStockPriceOnDate(current_date)
+            return self._hedging_unit * (self._option.getMarketValue(current_date) + abs(self._delta) * Marketplace.getStockPriceOnDate(current_date))
 
     def getValueDistribution(self, current_date):
         if self._delta == None and self._option == None:
             return 0.0
         else:
-            return [self._option.getMarketValue(current_date) , self._delta * Marketplace.getStockPriceOnDate(current_date) ]
+            return self._hedging_unit * [self._option.getMarketValue(current_date) , self._delta * Marketplace.getStockPriceOnDate(current_date) ]
 
     def getPortfolioGamma(self, current_date):
         if self._option == None:
