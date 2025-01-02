@@ -12,6 +12,9 @@ class Option:
         self._K = K
         self._optionType = optionType
 
+    def print(self, current_date):
+        print("Option: " + str(self._creation_date) + " " + str(current_date) + " "+ str(self._expire_date) + " " + str(self._K) + " " + str(self._optionType) + " " + str( Marketplace.getStockPriceOnDate(current_date) ) + " " + str( Marketplace.get_yield_for_date(current_date) ))
+
     def get_creation_date(self):
         return self._creation_date
 

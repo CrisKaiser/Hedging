@@ -35,7 +35,7 @@ class DynamicsII:
 
     def updateHedgingType(self):
         if self._hedgingState == Global.StatesII.CALL:
-            self._hedging_type = Global.OType.CALL
+            self._hedging_type = Global.OType.PUT
         else:
             self._hedging_type = Global.OType.PUT
 

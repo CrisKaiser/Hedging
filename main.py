@@ -12,11 +12,12 @@ from views.PortfolioValueView import PortfolioValueView
 from Option import Option
 from framework.DateCalc import DateCalc
 from framework.Marketplace import Marketplace
+from framework.HedgingDelta import HedgingDelta
 import Global
 
 def main():
     equity = Equity() #model
-    dynamics = DynamicsII(equity) #controler
+    dynamics = DynamicsV(equity) #controler
     #---views----
     equityView = EquityView(equity)
     equityNormalizedView = EquityNormalizedView(equity)
@@ -24,7 +25,7 @@ def main():
     #------------
 
     dynamics.run()
-    equityNormalizedView.drawStockAndEquity()
+    equityNormalizedView.drawSEIV()
 
 if __name__ == "__main__":
     main()

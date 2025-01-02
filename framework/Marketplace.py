@@ -16,10 +16,10 @@ class Marketplace:
     def getMarketOptionPrice(creation_date, current_date, expire_date, K, optionType):
         if DateCalc.isDateBefore(current_date, expire_date):
             _sigma = None
-            if Global.VOLATILTY_MODE == 1:
-                _sigma = Marketplace.getImpliedVolatility(creation_date)
+            if Global.VOLATILTY_MODE == 0:
+                _sigma = Marketplace.getImpliedVolatility(current_date)
             else:
-                _sigma = Marketplace.getHistoricalVolatility(creation_date)
+                _sigma = Marketplace.getHistoricalVolatility(current_date)
             _r = Marketplace.get_yield_for_date(current_date)
             bs = BlackScholes(_r, _sigma)
             st = Marketplace.getStockPriceOnDate(current_date)
@@ -34,10 +34,10 @@ class Marketplace:
     @staticmethod
     def getMarketOptionTheta(creation_date, current_date, expire_date, K, optionType):
         _sigma = None
-        if Global.VOLATILTY_MODE == 1:
-            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        if Global.VOLATILTY_MODE == 0:
+            _sigma = Marketplace.getImpliedVolatility(current_date)
         else:
-            _sigma = Marketplace.getHistoricalVolatility(creation_date)
+            _sigma = Marketplace.getHistoricalVolatility(current_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
@@ -47,10 +47,10 @@ class Marketplace:
     @staticmethod
     def getMarketOptionGamma(creation_date, current_date, expire_date, K, optionType):
         _sigma = None
-        if Global.VOLATILTY_MODE == 1:
-            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        if Global.VOLATILTY_MODE == 0:
+            _sigma = Marketplace.getImpliedVolatility(current_date)
         else:
-            _sigma = Marketplace.getHistoricalVolatility(creation_date)
+            _sigma = Marketplace.getHistoricalVolatility(current_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
@@ -60,10 +60,10 @@ class Marketplace:
     @staticmethod
     def getMarketOptionVega(creation_date, current_date, expire_date, K, optionType):
         _sigma = None
-        if Global.VOLATILTY_MODE == 1:
-            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        if Global.VOLATILTY_MODE == 0:
+            _sigma = Marketplace.getImpliedVolatility(current_date)
         else:
-            _sigma = Marketplace.getHistoricalVolatility(creation_date)
+            _sigma = Marketplace.getHistoricalVolatility(current_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
@@ -73,10 +73,10 @@ class Marketplace:
     @staticmethod
     def getMarketOptionRho(creation_date, current_date, expire_date, K, optionType):
         _sigma = None
-        if Global.VOLATILTY_MODE == 1:
-            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        if Global.VOLATILTY_MODE == 0:
+            _sigma = Marketplace.getImpliedVolatility(current_date)
         else:
-            _sigma = Marketplace.getHistoricalVolatility(creation_date)
+            _sigma = Marketplace.getHistoricalVolatility(current_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         st = Marketplace.getStockPriceOnDate(current_date)
@@ -107,10 +107,10 @@ class Marketplace:
     @staticmethod
     def getMarketOptionGreeks(creation_date, current_date, expire_date, K, optionType):
         _sigma = None
-        if Global.VOLATILTY_MODE == 1:
-            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        if Global.VOLATILTY_MODE == 0:
+            _sigma = Marketplace.getImpliedVolatility(current_date)
         else:
-            _sigma = Marketplace.getHistoricalVolatility(creation_date)
+            _sigma = Marketplace.getHistoricalVolatility(current_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         s0 = Marketplace.getStockPriceOnDate(creation_date)
@@ -159,10 +159,10 @@ class Marketplace:
     @staticmethod
     def getOptionBigPhiA(creation_date, current_date, expire_date, K, optionType):
         _sigma = None
-        if Global.VOLATILTY_MODE == 1:
-            _sigma = Marketplace.getImpliedVolatility(creation_date)
+        if Global.VOLATILTY_MODE == 0:
+            _sigma = Marketplace.getImpliedVolatility(current_date)
         else:
-            _sigma = Marketplace.getHistoricalVolatility(creation_date)
+            _sigma = Marketplace.getHistoricalVolatility(current_date)
         _r = Marketplace.get_yield_for_date(current_date)
         bs = BlackScholes(_r, _sigma)
         st = Marketplace.getStockPriceOnDate(current_date)

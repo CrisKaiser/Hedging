@@ -60,7 +60,8 @@ class Portfolio:
         if self._delta == None and self._option == None:
             return 0.0
         else:
-            return self._hedging_unit * [self._option.getMarketValue(current_date) , self._delta * Marketplace.getStockPriceOnDate(current_date) ]
+            self._option.print(current_date)
+            return  [self._hedging_unit * self._option.getMarketValue(current_date) , self._hedging_unit * self._delta * Marketplace.getStockPriceOnDate(current_date) ]
 
     def getPortfolioGamma(self, current_date):
         if self._option == None:

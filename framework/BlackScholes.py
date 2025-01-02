@@ -16,19 +16,19 @@ class BlackScholes:
 
     def calcOptionPrice(self, creation_date, current_date, expire_date, K, optionType, st):
         if st <= 0:
-            raise ValueError("Stockprice negative!")
+            raise ValueError("Der Basiswertpreis muss positiv sein.")
         if K <= 0:
-            raise ValueError("Strikeprice negative!")
+            raise ValueError("Der Strike-Preis muss positiv sein.")
         if self.day_difference(current_date, expire_date) <= 0:
-            raise ValueError("T negative!")
+            raise ValueError("Die Laufzeit muss positiv sein.")
         
         bigPhiA = self.getBigPhiA(creation_date, current_date, expire_date, K, optionType, st)
         bigPhiB = self.getBigPhiB(creation_date, current_date, expire_date, K, optionType, st)
 
         if optionType == Global.OType.CALL:
-            return st * bigPhiA - K * np.exp(-self._r * self.day_difference(current_date, expire_date)) * bigPhiB
+            return max(0, st * bigPhiA - K * np.exp(-self._r * self.day_difference(current_date, expire_date)) * bigPhiB)
         elif optionType == Global.OType.PUT:
-            return K * np.exp(-self._r * self.day_difference(current_date, expire_date)) * (1 - bigPhiB) - st * (1 - bigPhiA)
+            return max(0, K * np.exp(-self._r * self.day_difference(current_date, expire_date)) * (1 - bigPhiB) - st * (1 - bigPhiA))
 
 
     def day_difference(self, date1: str, date2: str) -> float:
@@ -41,9 +41,9 @@ class BlackScholes:
     def getA(self, creation_date, current_date, expire_date, K, st):
         T = self.day_difference(creation_date, expire_date)
         if T <= 0:
-            raise ValueError("T negative!")
+            raise ValueError("Die Restlaufzeit T muss positiv sein.")
         if self._sigma <= 0:
-            raise ValueError("Volatility negative!")
+            raise ValueError("Die Volatilität muss positiv sein.")
     
         _c0 = math.log(st / K)
         _c1 = (self._r + 0.5 * math.pow(self._sigma, 2)) * T

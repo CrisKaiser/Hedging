@@ -11,8 +11,8 @@ class MonteCarlo:
 
     #default
     _N = 10000
-    _sigma = 0.17314693165057277
-    _mu = Global.EXP_RETURN
+    _sigma = 0.1
+    _mu = 0.02
 
     def calcOptionPrice(self, creation_date, current_date, expire_date, K, optionType, s0):
         return np.exp( self.day_difference(expire_date, current_date) ) * self.monteCarlo(self._N, creation_date, expire_date, K, optionType, s0)

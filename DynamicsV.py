@@ -2,7 +2,10 @@
 import Global
 from framework.DateCalc import DateCalc
 from framework.Marketplace import Marketplace
+import numpy as np
 
+SM_SENS_UP = 3
+SM_SENS_DOWN = -3
 
 class StateMachine:
     def __init__(self):
@@ -14,9 +17,9 @@ class StateMachine:
 
     def transition(self, eq, level):
         if self.state == Global.StatesV.HEDGE_CALL:
-            if self.counter == 3:
+            if self.counter == SM_SENS_UP:
                 self.state = Global.StatesV.INVEST_CALL
-            elif self.counter == -3:
+            elif self.counter == SM_SENS_DOWN:
                 self.state = Global.StatesV.HEDGE_PUT
         
         elif self.state == Global.StatesV.INVEST_CALL:
@@ -37,6 +40,7 @@ class DynamicsV:
     _current_date = Global.START_DATE
     _hedgingState = Global.StatesIV.WEAK_CALL
     _sm = StateMachine()
+    _market_memory = [1,0,1,0,1,0,1,0,1,0]
     
     def __init__(self, equity):
         if equity == None:
@@ -52,15 +56,16 @@ class DynamicsV:
     def equityUpdate(self):
         self.updateState(self._current_date)
         if self._sm.state == Global.StatesV.INVEST_CALL:
-            self._equity.rebuild(self._current_date, Global.OType.CALL)
-            print("INVESTING with CALLS")
+            self._equity.hedge(self._current_date, Global.OType.CALL)
+            #print("INVESTING with CALLS")
         elif self._sm.state == Global.StatesV.HEDGE_CALL:
             self._equity.hedge(self._current_date, Global.OType.CALL)
             l = self._equity.portfolio._hedging_level 
-            print("HEDGING with CALLS at " + str(l))
+            #print("HEDGING with CALLS at " + str(l))
         elif self._sm.state == Global.StatesV.HEDGE_PUT:
             self._equity.hedge(self._current_date, Global.OType.PUT)
-            print("HEDGING with PUTS " + str(l))
+            l = self._equity.portfolio._hedging_level 
+            #print("HEDGING with PUTS " + str(l))
 
     def sensitivityCheck(self):
         #{
@@ -70,16 +75,19 @@ class DynamicsV:
             
 
     def updateState(self, current_date):
-        _new_level = self._equity.getEquity(self._current_date)
+        _new_level = 1000 # self._equity.getEquity(self._current_date)
+        self._market_memory.insert(0, 0)
+        self._market_memory.pop()
         if self.isStockIncreasing(self._current_date):
-            _value = self.clamp(self._sm.counter+1, -3, 3)
-            self._sm.update_counter(_value, self._equity, _new_level)
+            self._market_memory[0] = 1
         else:
-            if self._sm.counter > 0:
-                self._sm.update_counter(0, self._equity, _new_level)
-            else:
-                _value = self.clamp(self._sm.counter+1, -3, 3)
-                self._sm.update_counter(_value, self._equity, _new_level)
+            self._market_memory[0] = 0
+        _value = None
+        if sum(self._market_memory) < 6:
+            _value = -3
+        else:
+            _value = 0
+        self._sm.update_counter(_value, self._equity, _new_level)
 
 
     def isStockIncreasing(self, current_date):
