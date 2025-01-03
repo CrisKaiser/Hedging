@@ -5,6 +5,7 @@ from DynamicsII import DynamicsII
 from DynamicsIII import DynamicsIII
 from DynamicsIV import DynamicsIV
 from DynamicsV import DynamicsV
+from DynamicsVI import DynamicsVI
 from views.EquityView import EquityView
 from views.EquityNormalizedView import EquityNormalizedView
 from views.PortfolioValueView import PortfolioValueView
@@ -17,7 +18,7 @@ import Global
 
 def main():
     equity = Equity() #model
-    dynamics = DynamicsV(equity) #controler
+    dynamics = DynamicsVI(equity) #controler
     #---views----
     equityView = EquityView(equity)
     equityNormalizedView = EquityNormalizedView(equity)
@@ -25,7 +26,7 @@ def main():
     #------------
 
     dynamics.run()
-    equityNormalizedView.drawSEIV()
+    equityNormalizedView.drawStockAndEquity()
 
 if __name__ == "__main__":
     main()

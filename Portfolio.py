@@ -35,7 +35,9 @@ class Portfolio:
 
     def updateHedging(self, current_date, optionType):
         if self._option == None:
-            self.rebuild(current_date, optionType)
+            return self.rebuild(current_date, optionType)
+        if self._option._optionType != optionType:
+            return self.rebuild(current_date, optionType)
         if DateCalc.isDateBefore(current_date, self._option.get_expire_date()):
             revenue = self.getValue(current_date)
             self.updateDelta(current_date)

@@ -24,9 +24,12 @@ class EquityNormalizedView:
         _entry = DateCalc.daysBetweenDates(Global.START_DATE, date)
         self._equityCache[_entry] = self._equity.getEquity(date)
         self._stockCache[_entry] = Marketplace.getStockPriceOnDate(date)
-        self._iVolCache[_entry] = Marketplace.getImpliedVolatility(date)
-        self._iVolCache[_entry] = Marketplace.getHistoricalVolatility(date)
         self._thetaCache[_entry] = self._equity.getPortfolio().getPortfolioTheta(date)
+        if Global.VOLATILTY_MODE == 0:
+            self._iVolCache[_entry] = Marketplace.getImpliedVolatility(date)
+        else:
+            self._iVolCache[_entry] = Marketplace.getHistoricalVolatility(date)
+        
 
     def draw(self):
         multiplier = 1000.0 / self._equityCache[0]

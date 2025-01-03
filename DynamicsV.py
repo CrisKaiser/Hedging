@@ -83,7 +83,7 @@ class DynamicsV:
         else:
             self._market_memory[0] = 0
         _value = None
-        if sum(self._market_memory) < 6:
+        if sum(self._market_memory) < 7:
             _value = -3
         else:
             _value = 0
