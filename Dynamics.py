@@ -9,9 +9,9 @@ from numpy.linalg import norm
 class Dynamics:
     _equity = None
     _current_date = Global.START_DATE
-    _marketCache1 = np.zeros(Global.MARKET_CACHE1_LENGTH).tolist()
-    _marketCache2 = np.zeros(Global.MARKET_CACHE2_LENGTH).tolist()
-    _marketCache3 = np.zeros(Global.MARKET_CACHE3_LENGTH).tolist()
+    _marketCache1 = np.zeros(5).tolist()
+    _marketCache2 = np.zeros(10).tolist()
+    _marketCache3 = np.zeros(20).tolist()
     _marketDataSet = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
     _marketDictionary = {}
     _views = []
@@ -42,23 +42,24 @@ class Dynamics:
             self._marketDataSet[i] = self.isStockIncreasing(new_date)
 
     def fillCaches(self, current_date):
-        for i in range(Global.MARKET_CACHE1_LENGTH):
+        for i in range(5):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
             self._marketCache1[i] = self.isStockIncreasing(new_date)
-        for i in range(Global.MARKET_CACHE2_LENGTH):
+        for i in range(10):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
             self._marketCache2[i] = self.isStockIncreasing(new_date)
-        for i in range(Global.MARKET_CACHE3_LENGTH):
+        for i in range(20):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
             self._marketCache3[i] = self.isStockIncreasing(new_date)
 
     def getSigmas(self, date):
         self.fillCaches(date)
-        sigma1 = sum(self._marketCache1) / Global.MARKET_CACHE1_LENGTH
-        sigma2 = sum(self._marketCache2) / Global.MARKET_CACHE2_LENGTH
-        sigma3 = sum(self._marketCache3) / Global.MARKET_CACHE3_LENGTH
+        sigma1 = sum(self._marketCache1) / 5
+        sigma2 = sum(self._marketCache2) / 10
+        sigma3 = sum(self._marketCache3) / 20
         res = [sigma1, sigma2, sigma3]
-        return self.clamp(res / norm(res), 0.0, 1.0)
+
+        return res / norm(res)
 
     def bigPi(self, current_date):
         self.fillMarketDataSet(self._current_date)
@@ -85,7 +86,7 @@ class Dynamics:
         return max(min_value, min(value, max_value))
 
     def preload(self):
-        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + Global.MARKET_CACHE3_LENGTH) )
+        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + 20) )
         while not DateCalc.areDatesEqual(_date, Global.END_DATE):
             self._marketDictionary[_date] = Marketplace.getStockPriceOnDate(_date)
             _date = DateCalc.getDateNDaysAfter(_date, 1)
