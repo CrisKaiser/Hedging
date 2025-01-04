@@ -14,11 +14,14 @@ class DynamicsVI:
     _marketCache2 = np.zeros(Global.MARKET_CACHE2_LENGTH).tolist()
     _marketCache3 = np.zeros(Global.MARKET_CACHE3_LENGTH).tolist()
     _marketDataSet = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
+    _marketDictionary = {}
     
     def __init__(self, equity):
         if equity == None:
             raise ValueError("Equity is null")
         self._equity = equity
+        self.preload()
+        print("Market Data loaded")
 
     def run(self):
         while(not DateCalc.areDatesEqual(self._current_date, Global.END_DATE)):
@@ -70,10 +73,19 @@ class DynamicsVI:
 
     def isStockIncreasing(self, current_date):
         _yesterday = DateCalc.getDateNDaysAfter(current_date, -1)
-        if Marketplace.getStockPriceOnDate(current_date) > Marketplace.getStockPriceOnDate(_yesterday):
+        if self._marketDictionary[current_date] > self._marketDictionary[_yesterday]:
             return 1
         else:
             return 0
 
     def clamp(self, value, min_value, max_value):
         return max(min_value, min(value, max_value))
+
+    def preload(self):
+        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + Global.MARKET_CACHE3_LENGTH) )
+        while not DateCalc.areDatesEqual(_date, Global.END_DATE):
+            self._marketDictionary[_date] = Marketplace.getStockPriceOnDate(_date)
+            _date = DateCalc.getDateNDaysAfter(_date, 1)
+
+
+
