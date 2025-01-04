@@ -3,7 +3,7 @@ from enum import Enum
 EXP_RETURN = 0.02 #=expected asset drift
 HEDGING_MODE = 0 #0 -> Black-Scholes, 1-> Monte-Carlo
 MATURTIY = 90
-VOLATILITY_PREMIUM = 0.2
+VOLATILITY_PREMIUM = 0.1
 START_DATE = "2023-03-25"
 END_DATE = "2024-12-10"
 VOLATILTY_MODE = 0 #0 -> IV, 1 -> HV

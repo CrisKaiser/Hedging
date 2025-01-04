@@ -6,8 +6,7 @@ from framework.LinearRegression import LinearRegression
 import numpy as np
 from numpy.linalg import norm
 
-
-class DynamicsVI:
+class Dynamics:
     _equity = None
     _current_date = Global.START_DATE
     _marketCache1 = np.zeros(Global.MARKET_CACHE1_LENGTH).tolist()
@@ -15,6 +14,8 @@ class DynamicsVI:
     _marketCache3 = np.zeros(Global.MARKET_CACHE3_LENGTH).tolist()
     _marketDataSet = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
     _marketDictionary = {}
+    _views = []
+    _bigPhi = None
     
     def __init__(self, equity):
         if equity == None:
@@ -30,7 +31,7 @@ class DynamicsVI:
         
     def equityUpdate(self):
         res = self.bigPi(self._current_date)
-        if res > 0.75:
+        if res > 0.6:
             self._equity.hedge(self._current_date, Global.OType.CALL)
         else:
             self._equity.hedge(self._current_date, Global.OType.PUT)
@@ -57,7 +58,7 @@ class DynamicsVI:
         sigma2 = sum(self._marketCache2) / Global.MARKET_CACHE2_LENGTH
         sigma3 = sum(self._marketCache3) / Global.MARKET_CACHE3_LENGTH
         res = [sigma1, sigma2, sigma3]
-        return res / norm(res)
+        return self.clamp(res / norm(res), 0.0, 1.0)
 
     def bigPi(self, current_date):
         self.fillMarketDataSet(self._current_date)
@@ -68,7 +69,9 @@ class DynamicsVI:
         coVec = LinearRegression.calcSolutionVector(matrix, self._marketDataSet)
         currentSigma = self.getSigmas(current_date)
         sum = coVec[0] * currentSigma[0] + coVec[1] * currentSigma[1] + coVec[2] * currentSigma[2]
-        print(sum)
+        self._bigPhi = sum
+        self.notifyViews(current_date)
+        print(current_date)
         return sum
 
     def isStockIncreasing(self, current_date):
@@ -86,6 +89,10 @@ class DynamicsVI:
         while not DateCalc.areDatesEqual(_date, Global.END_DATE):
             self._marketDictionary[_date] = Marketplace.getStockPriceOnDate(_date)
             _date = DateCalc.getDateNDaysAfter(_date, 1)
+    
+    def viewRegister(self, view):
+        self._views.append(view)
 
-
-
+    def notifyViews(self, current_date):
+        for view in self._views:
+            view.updateView(current_date)

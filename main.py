@@ -1,14 +1,9 @@
 
 from Equity import Equity
-from DynamicsI import DynamicsI
-from DynamicsII import DynamicsII
-from DynamicsIII import DynamicsIII
-from DynamicsIV import DynamicsIV
-from DynamicsV import DynamicsV
-from DynamicsVI import DynamicsVI
+from Dynamics import Dynamics
 from views.EquityView import EquityView
 from views.EquityNormalizedView import EquityNormalizedView
-from views.PortfolioValueView import PortfolioValueView
+from views.PhiView import PhiView
 
 from Option import Option
 from framework.DateCalc import DateCalc
@@ -18,11 +13,11 @@ import Global
 
 def main():
     equity = Equity() #model
-    dynamics = DynamicsVI(equity) #controler
+    dynamics = Dynamics(equity) #controler
     #---views----
     equityView = EquityView(equity)
     equityNormalizedView = EquityNormalizedView(equity)
-    portfolioValueView = PortfolioValueView(equity.getPortfolio())
+    phiView = PhiView(dynamics)
     #------------
 
     dynamics.run()
