@@ -1,3 +1,4 @@
+
 import pandas as pd
 from datetime import datetime, timedelta
 import sys
@@ -6,8 +7,8 @@ import math
 import numpy as np
 
 n = 30
-csv_file = r"C:\Users\crisk\Documents\uni\Semester3\ModSim\Pricing\code\data\bitcoin_2010-07-17_2024-12-15.csv"
-output_csv = r"C:\Users\crisk\Documents\uni\Semester3\ModSim\Pricing\code\data\bitcoin_volatility.csv"
+csv_file = r"C:\Users\crisk\Documents\uni\Semester3\ModSim\Pricing\code\data\Bitcoin2015_2024.csv"
+output_csv = r"C:\Users\crisk\Documents\uni\Semester3\ModSim\Pricing\code\bitcoin_volatility.csv"
 
 def getDailyReturn(sDay, sDayBefore):
     return math.log(sDay/sDayBefore)
@@ -25,18 +26,17 @@ def getHistoricalVolatility(date):
 def get_last_n_days_close_values(start_date):
     try:
         df = pd.read_csv(csv_file)
-        df['Start'] = pd.to_datetime(df['Start'])
+        df['timeOpen'] = pd.to_datetime(df['timeOpen'], format="%Y-%m-%dT%H:%M:%S.%fZ")
         start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
         end_date_obj = start_date_obj
-        start_date_30_days_ago = start_date_obj - timedelta(days=n+1)
-        filtered_df = df[(df['Start'] > start_date_30_days_ago) & (df['Start'] <= end_date_obj)]
-        close_values = filtered_df.sort_values(by='Start', ascending=False)['Close'].tolist()
+        start_date_n_days_ago = start_date_obj - timedelta(days=n+1)
+        filtered_df = df[(df['timeOpen'] > start_date_n_days_ago) & (df['timeOpen'] <= end_date_obj)]
+        close_values = filtered_df.sort_values(by='timeOpen', ascending=False)['close'].tolist()
         return close_values
 
     except Exception as e:
         print(f"Ein Fehler ist aufgetreten: {e}")
         return []
-
 
 def save_volatility_to_csv(start_date, end_date, output_path):
     volatility_data = []
@@ -59,6 +59,6 @@ def save_volatility_to_csv(start_date, end_date, output_path):
     df.to_csv(output_path, index=False)
     print(f"Volatilität erfolgreich in {output_path} gespeichert.")
 
-start_date = "2010-09-01"
+start_date = "2015-01-01"
 end_date = "2024-12-15"
 save_volatility_to_csv(start_date, end_date, output_csv)

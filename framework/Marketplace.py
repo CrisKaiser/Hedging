@@ -6,7 +6,7 @@ import Global
 from framework.DateCalc import DateCalc
 
 file_path = r"data\interest_rates.csv"
-file_path_stock = r"data\bitcoin_2010-07-17_2024-12-15.csv"
+file_path_stock = r"C:\Users\crisk\Documents\uni\Semester3\ModSim\Pricing\code\data\Bitcoin2015_2024.csv"
 file_path_volatility = r"data\bitcoin_volatility.csv"
 file_path_implied_volatility = r"data\dvol_data.csv"
 
@@ -141,10 +141,11 @@ class Marketplace:
                 reader = csv.DictReader(file)
 
                 for row in reader:
-                    date = row.get('\ufeffStart')
+                    entry = row.get('\ufefftimeOpen')
+                    date = entry.split("T")[0]
                     if date == target_date:
-                        high_price = float(row.get('High', 0))
-                        low_price = float(row.get('Low', 0))
+                        high_price = float(row.get('high', 0))
+                        low_price = float(row.get('low', 0))
                         avg_price = (high_price + low_price) / 2
                         return avg_price
 

@@ -1,7 +1,6 @@
 import csv
 from datetime import datetime, timedelta
 
-# Definiere die Zinsänderungsdaten und -werte
 changes = [
     ("2009-05-07", 0.01),
     ("2011-04-07", 0.0125),
@@ -30,17 +29,13 @@ changes = [
     ("2024-12-12", 0.0315)
 ]
 
-# Konvertiere Datumsstrings in datetime-Objekte
 changes = [(datetime.strptime(date, '%Y-%m-%d'), yield_) for date, yield_ in changes]
 
-# Zeitraum definieren
 start_date = datetime.strptime("2010-07-17", '%Y-%m-%d')
 end_date = datetime.strptime("2024-12-15", '%Y-%m-%d')
 
-# Pfad zur Datei festlegen
 file_path = 'interest_rates.csv'
 
-# CSV-Datei erstellen
 with open(file_path, mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(['date', 'yield'])
@@ -48,7 +43,6 @@ with open(file_path, mode='w', newline='') as file:
     current_yield = None
     change_index = 0
 
-    # Initialisiere current_yield auf den ersten Zinswert vor dem Startdatum
     for i in range(len(changes)):
         if changes[i][0] <= start_date:
             current_yield = changes[i][1]
@@ -56,15 +50,12 @@ with open(file_path, mode='w', newline='') as file:
             change_index = i
             break
 
-    # Für jeden Tag im definierten Zeitraum
     current_date = start_date
     while current_date <= end_date:
-        # Überprüfen, ob ein Zinsänderungstag erreicht ist
         if change_index < len(changes) and current_date == changes[change_index][0]:
             current_yield = changes[change_index][1]
             change_index += 1
 
-        # Formatieren des Datums im Format YYYY-MM-DD
         date_str = current_date.strftime('%Y-%m-%d')
         writer.writerow([date_str, current_yield])
 
