@@ -12,7 +12,7 @@ class Dynamics:
     _marketCache1 = np.zeros(5).tolist()
     _marketCache2 = np.zeros(10).tolist()
     _marketCache3 = np.zeros(20).tolist()
-    _marketDataSet = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
+    _marketDataSet = [0]
     _marketDictionary = {}
     _views = []
     _bigPhi = None
@@ -63,10 +63,8 @@ class Dynamics:
 
     def bigPi(self, current_date):
         self.fillMarketDataSet(self._current_date)
-        matrix = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
-        for i in range(Global.MARKET_DATA_LENGTH):
-            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            matrix[i] = self.getSigmas(new_date)
+        matrix = [0]
+        matrix[0] = self.getSigmas(current_date)
         coVec = LinearRegression.calcSolutionVector(matrix, self._marketDataSet)
         currentSigma = self.getSigmas(current_date)
         sum = coVec[0] * currentSigma[0] + coVec[1] * currentSigma[1] + coVec[2] * currentSigma[2]
@@ -86,7 +84,7 @@ class Dynamics:
         return max(min_value, min(value, max_value))
 
     def preload(self):
-        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + 20) )
+        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(21) )
         while not DateCalc.areDatesEqual(_date, Global.END_DATE):
             self._marketDictionary[_date] = Marketplace.getStockPriceOnDate(_date)
             _date = DateCalc.getDateNDaysAfter(_date, 1)

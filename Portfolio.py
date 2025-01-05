@@ -8,7 +8,6 @@ import Global
 class Portfolio:
     _delta = None
     _option = None
-    _hedging_level = Global.INITIAL_INVEST
     _hedging_unit = None
     _views = []
 
@@ -26,6 +25,8 @@ class Portfolio:
             _expire_date = DateCalc.getDateNDaysAfter(current_date, Global.MATURTIY)
             self._option = Option(current_date, _expire_date, _K, optionType)
             self.updateDelta(current_date)
+            if not Global.DYNAMIC_INVEST:
+                self.updateHedgingUnit(current_date)
             invest = self.getValue(current_date)
             self.notifyViews(current_date)
             return revenue - invest
