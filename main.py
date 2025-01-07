@@ -22,7 +22,7 @@ def main():
     #------------
 
     dynamics.run()
-    equityNormalizedView.drawSED()
+    equityNormalizedView.drawSE()
 
 if __name__ == "__main__":
     main()

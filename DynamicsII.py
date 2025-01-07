@@ -580,6 +580,7 @@ class DynamicsII:
         matrix = []
         matrix.append( self.getSigmas(current_date) )
         coVec = LinearRegression.calcSolutionVector(matrix, self._marketDataSet)
+        print(coVec)
         currentSigma = self.getSigmas(current_date)
         sum = 0
         for i in range(100):
