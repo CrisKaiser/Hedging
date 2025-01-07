@@ -111,7 +111,7 @@ class DynamicsII:
     _marketCache99 = np.zeros(99).tolist()
     _marketCache100 = np.zeros(100).tolist()
 
-    _marketDataSet = [0]
+    _marketDataSet = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
     _marketDictionary = {}
     _views = []
     _bigPhi = None
@@ -127,6 +127,7 @@ class DynamicsII:
         while(not DateCalc.areDatesEqual(self._current_date, Global.END_DATE)):
             self.equityUpdate()
             self._current_date = DateCalc.getDateNDaysAfter(self._current_date, 1)
+        print(self._equity.getEquity(self._current_date))
         
     def equityUpdate(self):
         res = self.bigPi(self._current_date)
@@ -136,7 +137,9 @@ class DynamicsII:
             self._equity.hedge(self._current_date, Global.OType.PUT)
 
     def fillMarketDataSet(self, current_date):
-        self._marketDataSet[0] = self.isStockIncreasing(current_date)
+        for i in range(Global.MARKET_DATA_LENGTH):
+            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
+            self._marketDataSet[i] = self.isStockIncreasing(new_date)
 
     def fillCaches(self, current_date):
         for i in range(1):
@@ -577,8 +580,11 @@ class DynamicsII:
 
     def bigPi(self, current_date):
         self.fillMarketDataSet(self._current_date)
-        matrix = []
-        matrix.append( self.getSigmas(current_date) )
+        print(self._marketDataSet)
+        matrix = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
+        for i in range(Global.MARKET_DATA_LENGTH):
+            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
+            matrix[i] = self.getSigmas(new_date)
         coVec = LinearRegression.calcSolutionVector(matrix, self._marketDataSet)
         print(coVec)
         currentSigma = self.getSigmas(current_date)
@@ -601,7 +607,7 @@ class DynamicsII:
         return max(min_value, min(value, max_value))
 
     def preload(self):
-        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(100) )
+        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + 100) )
         while not DateCalc.areDatesEqual(_date, Global.END_DATE):
             self._marketDictionary[_date] = Marketplace.getStockPriceOnDate(_date)
             _date = DateCalc.getDateNDaysAfter(_date, 1)
