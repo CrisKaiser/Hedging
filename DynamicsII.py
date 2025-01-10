@@ -127,7 +127,7 @@ class DynamicsII:
         while(not DateCalc.areDatesEqual(self._current_date, Global.END_DATE)):
             self.equityUpdate()
             self._current_date = DateCalc.getDateNDaysAfter(self._current_date, 1)
-        print(self._equity.getEquity(self._current_date))
+            print(self._equity.getEquity(self._current_date))
         
     def equityUpdate(self):
         res = self.bigPi(self._current_date)
@@ -580,13 +580,11 @@ class DynamicsII:
 
     def bigPi(self, current_date):
         self.fillMarketDataSet(self._current_date)
-        print(self._marketDataSet)
         matrix = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
         for i in range(Global.MARKET_DATA_LENGTH):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
             matrix[i] = self.getSigmas(new_date)
         coVec = LinearRegression.calcSolutionVector(matrix, self._marketDataSet)
-        print(coVec)
         currentSigma = self.getSigmas(current_date)
         sum = 0
         for i in range(100):
