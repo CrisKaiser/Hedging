@@ -9,7 +9,7 @@ END_DATE = "2024-12-10"
 VOLATILTY_MODE = 1 #0 -> IV, 1 -> HV
 INITIAL_INVEST = 1000
 MARKET_DATA_LENGTH = 2
-TRIPEL_DATA_LENGTH = 3
+TUPEL_DATA_LENGTH = 3
 DYNAMIC_INVEST = True #false: rebuild Portfolio with 1000€ invest, true: rebuild Portfolio with initial units
 
 class OType(Enum):

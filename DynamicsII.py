@@ -14,7 +14,7 @@ class DynamicsII:
     _marketCache1 = np.zeros(2).tolist()
     _marketCache2 = np.zeros(10).tolist()
     _marketDataSet = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
-    _marketDataSetForTuple = np.zeros(Global.TupleL_DATA_LENGTH).tolist()
+    _marketDataSetForTuple = np.zeros(Global.TUPEL_DATA_LENGTH).tolist()
     _marketDictionary = {}
     _views = []
     _bigPhi = None
@@ -49,7 +49,7 @@ class DynamicsII:
             self._marketDataSet[i] = self.isStockIncreasing(new_date)
 
     def fillDataSetForTuple(self, current_date):
-        for i in range(Global.TupleL_DATA_LENGTH):
+        for i in range(Global.TUPEL_DATA_LENGTH):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
             self._marketDataSetForTuple[i] = self.isStockIncreasing(new_date)
 
@@ -95,7 +95,7 @@ class DynamicsII:
         _hitCache = np.zeros(len(dataSet))
         for i in range(len(dataSet)):
             _hitCount = 0
-            for day in range(Global.TupleL_DATA_LENGTH):
+            for day in range(Global.TUPEL_DATA_LENGTH):
                 if dataSet[i][1][day] > 0.5 + DECISION_MARGIN and self._marketDataSetForTuple[day] == 1:
                     _hitCount += 1
                 elif dataSet[i][1][day] < 0.5 +DECISION_MARGIN and self._marketDataSetForTuple[day] == 0:
@@ -109,7 +109,7 @@ class DynamicsII:
 
     def getBigPhiArray(self, current_date, l1, l2):
         array = []
-        for i in range(Global.TupleL_DATA_LENGTH):
+        for i in range(Global.TUPEL_DATA_LENGTH):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
 
             self.refreshCashLengths(l1, l2, new_date)

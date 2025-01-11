@@ -42,7 +42,7 @@ class DynamicsI:
             return 0
 
     def preload(self):
-        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + Global.MARKET_CACHE_LENGTH3) )
+        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + 1000) )
         while not DateCalc.areDatesEqual(_date, Global.END_DATE):
             self._marketDictionary[_date] = Marketplace.getStockPriceOnDate(_date)
             _date = DateCalc.getDateNDaysAfter(_date, 1)
