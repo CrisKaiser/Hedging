@@ -3,6 +3,8 @@ from Equity import Equity
 from Dynamics import Dynamics
 from DynamicsII import DynamicsII
 from DynamicsIII import DynamicsIII
+from DynamicsIV import DynamicsIV
+from DynamicsV import DynamicsV
 from views.EquityView import EquityView
 from views.EquityNormalizedView import EquityNormalizedView
 from views.PhiView import PhiView
@@ -15,7 +17,7 @@ import Global
 
 def main():
     equity = Equity() #model
-    dynamics = Dynamics(equity) #controler
+    dynamics = DynamicsV(equity) #controler
     #---views----
     equityView = EquityView(equity)
     equityNormalizedView = EquityNormalizedView(equity)

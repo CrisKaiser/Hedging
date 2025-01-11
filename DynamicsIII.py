@@ -10,16 +10,21 @@ class DynamicsIII:
     _equity = None
     _current_date = Global.START_DATE
 
-    _marketCache1 = np.zeros(1).tolist()
+    #short-term
     _marketCache2 = np.zeros(2).tolist()
     _marketCache3 = np.zeros(3).tolist()
-    _marketCache4 = np.zeros(4).tolist()
-    _marketCache5 = np.zeros(5).tolist()
+
+    #middle-term
     _marketCache6 = np.zeros(6).tolist()
     _marketCache7 = np.zeros(7).tolist()
     _marketCache8 = np.zeros(8).tolist()
-    _marketCache9 = np.zeros(9).tolist()
-    _marketCache10 = np.zeros(10).tolist()
+    
+    #long-term
+    _marketCache16 = np.zeros(16).tolist()
+    _marketCache17 = np.zeros(17).tolist()
+    _marketCache18 = np.zeros(18).tolist()
+    _marketCache19 = np.zeros(19).tolist()
+    _marketCache20 = np.zeros(20).tolist()
 
     _marketDataSet = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
     _marketDictionary = {}
@@ -42,7 +47,7 @@ class DynamicsIII:
         
     def equityUpdate(self):
         res = self.bigPi(self._current_date)
-        if res > 0.0:
+        if res > 0.6:
             self._equity.hedge(self._current_date, Global.OType.CALL)
         else:
             self._equity.hedge(self._current_date, Global.OType.PUT)
@@ -53,21 +58,14 @@ class DynamicsIII:
             self._marketDataSet[i] = self.isStockIncreasing(new_date)
 
     def fillCaches(self, current_date):
-        for i in range(1):
-            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            self._marketCache1[i] = self.isStockIncreasing(new_date)
         for i in range(2):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
             self._marketCache2[i] = self.isStockIncreasing(new_date)
         for i in range(3):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
             self._marketCache3[i] = self.isStockIncreasing(new_date)
-        for i in range(4):
-            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            self._marketCache4[i] = self.isStockIncreasing(new_date)
-        for i in range(5):
-            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            self._marketCache5[i] = self.isStockIncreasing(new_date)
+
+
         for i in range(6):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
             self._marketCache6[i] = self.isStockIncreasing(new_date)
@@ -77,28 +75,42 @@ class DynamicsIII:
         for i in range(8):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
             self._marketCache8[i] = self.isStockIncreasing(new_date)
-        for i in range(9):
+
+
+        for i in range(16):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            self._marketCache9[i] = self.isStockIncreasing(new_date)
-        for i in range(10):
+            self._marketCache16[i] = self.isStockIncreasing(new_date)
+        for i in range(17):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            self._marketCache10[i] = self.isStockIncreasing(new_date)
+            self._marketCache17[i] = self.isStockIncreasing(new_date)
+        for i in range(18):
+            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
+            self._marketCache18[i] = self.isStockIncreasing(new_date)
+        for i in range(19):
+            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
+            self._marketCache19[i] = self.isStockIncreasing(new_date)
+        for i in range(20):
+            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
+            self._marketCache20[i] = self.isStockIncreasing(new_date)
+
 
     def getSigmas(self, date):
         self.fillCaches(date)
-        sigma1 = sum(self._marketCache1) / 1
         sigma2 = sum(self._marketCache2) / 2
         sigma3 = sum(self._marketCache3) / 3
-        sigma4 = sum(self._marketCache4) / 4
-        sigma5 = sum(self._marketCache5) / 5
+
         sigma6 = sum(self._marketCache6) / 6
         sigma7 = sum(self._marketCache7) / 7
         sigma8 = sum(self._marketCache8) / 8
-        sigma9 = sum(self._marketCache9) / 9
-        sigma10 = sum(self._marketCache10) / 10
+
+        sigma16 = sum(self._marketCache16) / 16
+        sigma17 = sum(self._marketCache17) / 17
+        sigma18 = sum(self._marketCache18) / 18
+        sigma19 = sum(self._marketCache19) / 19
+        sigma20 = sum(self._marketCache20) / 20
 
         res = [
-            sigma1, sigma2, sigma3, sigma4, sigma5, sigma6, sigma7, sigma8, sigma9, sigma10
+            sigma2, sigma3, sigma6, sigma7, sigma8, sigma16, sigma17, sigma18, sigma19, sigma20
         ]
         return res / norm(res)
 
@@ -131,7 +143,7 @@ class DynamicsIII:
         return max(min_value, min(value, max_value))
 
     def preload(self):
-        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + 10) )
+        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + 100) )
         while not DateCalc.areDatesEqual(_date, Global.END_DATE):
             self._marketDictionary[_date] = Marketplace.getStockPriceOnDate(_date)
             _date = DateCalc.getDateNDaysAfter(_date, 1)
