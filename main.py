@@ -1,10 +1,8 @@
 
 from Equity import Equity
-from Dynamics import Dynamics
+from DynamicsI import DynamicsI
 from DynamicsII import DynamicsII
 from DynamicsIII import DynamicsIII
-from DynamicsIV import DynamicsIV
-from DynamicsV import DynamicsV
 from views.EquityView import EquityView
 from views.EquityNormalizedView import EquityNormalizedView
 from views.PhiView import PhiView

@@ -33,49 +33,10 @@ class Dynamics:
 
 
     def equityUpdate(self):
-        res = self.bigPi(self._current_date)
-        if res > 0.6:
+        if self.isStockIncreasing(self._current_date) == 1:
             self._equity.hedge(self._current_date, Global.OType.CALL)
         else:
             self._equity.hedge(self._current_date, Global.OType.PUT)
-
-    def fillMarketDataSet(self, current_date):
-        for i in range(Global.MARKET_DATA_LENGTH):
-            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            self._marketDataSet[i] = self.isStockIncreasing(new_date)
-
-    def fillCaches(self, current_date):
-        for i in range(Global.MARKET_CACHE_LENGTH1):
-            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            self._marketCache1[i] = self.isStockIncreasing(new_date)
-        for i in range(Global.MARKET_CACHE_LENGTH2):
-            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            self._marketCache2[i] = self.isStockIncreasing(new_date)
-        for i in range(Global.MARKET_CACHE_LENGTH3):
-            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            self._marketCache3[i] = self.isStockIncreasing(new_date)
-
-    def getSigmas(self, date):
-        self.fillCaches(date)
-        sigma1 = sum(self._marketCache1) / Global.MARKET_CACHE_LENGTH1
-        sigma2 = sum(self._marketCache2) / Global.MARKET_CACHE_LENGTH2
-        sigma3 = sum(self._marketCache3) / Global.MARKET_CACHE_LENGTH3
-        res = [sigma1, sigma2, sigma3]
-        return res / norm(res)
-
-    def bigPi(self, current_date):
-        self.fillMarketDataSet(self._current_date)
-        matrix = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
-        for i in range(Global.MARKET_DATA_LENGTH):
-            new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            matrix[i] = self.getSigmas(new_date)
-        coVec = LinearRegression.calcSolutionVector(matrix, self._marketDataSet)
-        currentSigma = self.getSigmas(current_date)
-        sum = coVec[0] * currentSigma[0] + coVec[1] * currentSigma[1] + coVec[2] * currentSigma[2]
-        self._bigPhi = sum
-        self.notifyViews(current_date)
-        print(current_date)
-        return sum
 
     def isStockIncreasing(self, current_date):
         _yesterday = DateCalc.getDateNDaysAfter(current_date, -1)
