@@ -12,10 +12,6 @@ MARKET_DATA_LENGTH = 2
 TRIPEL_DATA_LENGTH = 3
 DYNAMIC_INVEST = True #false: rebuild Portfolio with 1000€ invest, true: rebuild Portfolio with initial units
 
-MARKET_CACHE_LENGTH1 = 2
-MARKET_CACHE_LENGTH2 = 8
-MARKET_CACHE_LENGTH3 = 20
-
 class OType(Enum):
     PUT = 0
     CALL = 1

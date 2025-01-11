@@ -8,13 +8,13 @@ from numpy.linalg import norm
 
 DECISION_MARGIN = 0.05
 
-class DynamicsV:
+class DynamicsII:
     _equity = None
     _current_date = Global.START_DATE
-    _marketCache1 = np.zeros(Global.MARKET_CACHE_LENGTH1).tolist()
-    _marketCache2 = np.zeros(Global.MARKET_CACHE_LENGTH2).tolist()
+    _marketCache1 = np.zeros(2).tolist()
+    _marketCache2 = np.zeros(10).tolist()
     _marketDataSet = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
-    _marketDataSetForTripe = np.zeros(Global.TRIPEL_DATA_LENGTH).tolist()
+    _marketDataSetForTuple = np.zeros(Global.TupleL_DATA_LENGTH).tolist()
     _marketDictionary = {}
     _views = []
     _bigPhi = None
@@ -48,10 +48,10 @@ class DynamicsV:
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
             self._marketDataSet[i] = self.isStockIncreasing(new_date)
 
-    def fillDataSetForTripe(self, current_date):
-        for i in range(Global.TRIPEL_DATA_LENGTH):
+    def fillDataSetForTuple(self, current_date):
+        for i in range(Global.TupleL_DATA_LENGTH):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
-            self._marketDataSetForTripe[i] = self.isStockIncreasing(new_date)
+            self._marketDataSetForTuple[i] = self.isStockIncreasing(new_date)
 
     def fillCaches(self, current_date):
         for i in range(Global.MARKET_CACHE_LENGTH1):
@@ -90,19 +90,18 @@ class DynamicsV:
         return predicton
 
     def getBestMatchingTupleArray(self, dataSet, current_date):
-        self.fillDataSetForTripe(current_date)
+        self.fillDataSetForTuple(current_date)
 
         _hitCache = np.zeros(len(dataSet))
         for i in range(len(dataSet)):
             _hitCount = 0
-            for day in range(Global.TRIPEL_DATA_LENGTH):
-                if dataSet[i][1][day] > 0.5 + DECISION_MARGIN and self._marketDataSetForTripe[day] == 1:
+            for day in range(Global.TupleL_DATA_LENGTH):
+                if dataSet[i][1][day] > 0.5 + DECISION_MARGIN and self._marketDataSetForTuple[day] == 1:
                     _hitCount += 1
-                elif dataSet[i][1][day] < 0.5 +DECISION_MARGIN and self._marketDataSetForTripe[day] == 0:
+                elif dataSet[i][1][day] < 0.5 +DECISION_MARGIN and self._marketDataSetForTuple[day] == 0:
                     _hitCache += 1
             _hitCache[i] = _hitCount
         
-        #max_index = _hitCache.argmax()#
         max_value = _hitCache.max()
         max_indices = np.where(_hitCache == max_value)[0]
         return dataSet[max_indices[-1]]
@@ -110,7 +109,7 @@ class DynamicsV:
 
     def getBigPhiArray(self, current_date, l1, l2):
         array = []
-        for i in range(Global.TRIPEL_DATA_LENGTH):
+        for i in range(Global.TupleL_DATA_LENGTH):
             new_date = DateCalc.getDateNDaysAfter(current_date, -i)
 
             self.refreshCashLengths(l1, l2, new_date)

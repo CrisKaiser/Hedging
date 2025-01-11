@@ -6,13 +6,9 @@ from framework.LinearRegression import LinearRegression
 import numpy as np
 from numpy.linalg import norm
 
-class Dynamics:
+class DynamicsI:
     _equity = None
     _current_date = Global.START_DATE
-    _marketCache1 = np.zeros(Global.MARKET_CACHE_LENGTH1).tolist()
-    _marketCache2 = np.zeros(Global.MARKET_CACHE_LENGTH2).tolist()
-    _marketCache3 = np.zeros(Global.MARKET_CACHE_LENGTH3).tolist()
-    _marketDataSet = np.zeros(Global.MARKET_DATA_LENGTH).tolist()
     _marketDictionary = {}
     _views = []
     _bigPhi = None
@@ -44,9 +40,6 @@ class Dynamics:
             return 1
         else:
             return 0
-
-    def clamp(self, value, min_value, max_value):
-        return max(min_value, min(value, max_value))
 
     def preload(self):
         _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + Global.MARKET_CACHE_LENGTH3) )
