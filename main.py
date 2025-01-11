@@ -15,7 +15,7 @@ import Global
 
 def main():
     equity = Equity() #model
-    dynamics = DynamicsI(equity) #controler
+    dynamics = DynamicsIII(equity) #controler
     #---views----
     equityView = EquityView(equity)
     equityNormalizedView = EquityNormalizedView(equity)

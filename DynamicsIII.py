@@ -35,8 +35,11 @@ class DynamicsIII:
         self.fillCache(self._current_date)
         if sum(self._marketCache) / 5.0 > 0.5 + DECISION_MARGIN:
             self._equity.hedge(self._current_date, Global.OType.CALL)
+            self._bigPhi = 1
         else:
             self._equity.hedge(self._current_date, Global.OType.PUT)
+            self._bigPhi = 0
+        self.notifyViews(self._current_date)
 
     def fillCache(self, current_date):
         for i in range(5):
@@ -51,7 +54,7 @@ class DynamicsIII:
             return 0
 
     def preload(self):
-        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + Global.MARKET_CACHE_LENGTH3) )
+        _date = DateCalc.getDateNDaysAfter(Global.START_DATE, -(Global.MARKET_DATA_LENGTH + 100) )
         while not DateCalc.areDatesEqual(_date, Global.END_DATE):
             self._marketDictionary[_date] = Marketplace.getStockPriceOnDate(_date)
             _date = DateCalc.getDateNDaysAfter(_date, 1)

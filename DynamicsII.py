@@ -74,8 +74,8 @@ class DynamicsII:
 
     def getPrediction(self, current_date):
         tupleArray = []
-        for l1 in range(3, 6):
-            for l2 in range(10,11):
+        for l1 in range(2, 5):
+            for l2 in range(14,15):
                     tupleSpecificArray = []
                     tupleSpecificArray.append([l1, l2])
                     phiArray = self.getBigPhiArray(current_date, l1, l2)
@@ -87,6 +87,7 @@ class DynamicsII:
         predicton = array[1][0]
         print(array[0])
         print(predicton)
+        print(current_date)
         return predicton
 
     def getBestMatchingTupleArray(self, dataSet, current_date):

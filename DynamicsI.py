@@ -27,12 +27,14 @@ class DynamicsI:
             if self._current_date == Global.END_DATE:
                 print(self._equity.getEquity(self._current_date))
 
-
     def equityUpdate(self):
         if self.isStockIncreasing(self._current_date) == 1:
             self._equity.hedge(self._current_date, Global.OType.CALL)
+            self._bigPhi = 1
         else:
             self._equity.hedge(self._current_date, Global.OType.PUT)
+            self._bigPhi = 0
+        self.notifyViews(self._current_date)
 
     def isStockIncreasing(self, current_date):
         _yesterday = DateCalc.getDateNDaysAfter(current_date, -1)

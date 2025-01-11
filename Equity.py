@@ -1,11 +1,14 @@
 
 from Portfolio import Portfolio
 from ClearingAccount import ClearingAccount
+from framework.DateCalc import DateCalc
+import Global
+import csv
 
 class Equity:
     portfolio = None
     clearingAcc = None
-
+    equity_data = []
     _views = []
 
     def __init__(self):
@@ -54,3 +57,14 @@ class Equity:
     def notifyViews(self, current_date):
         for view in self._views:
             view.updateView(current_date)
+
+        equity_value = self.getEquity(current_date)
+        self.equity_data.append([current_date, equity_value])
+        
+        if DateCalc.areDatesEqual(current_date, DateCalc.getDateNDaysAfter(Global.END_DATE, -1)):
+            with open('equity_data.csv', mode='w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(['Date', 'Equity'])
+                writer.writerows(self.equity_data)
+
+        
